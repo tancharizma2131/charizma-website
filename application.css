@@ -1,0 +1,63 @@
+/* === Application Page - Stylish & Minimal Layout === */
+
+.application-showcase {
+    max-width: 850px; /* Constrain width for a focused, minimal feel */
+    margin: 0 auto; /* Center the container */
+    padding: 100px 40px; /* Generous vertical padding for whitespace */
+    text-align: center; /* Center all content within */
+}
+
+/* --- Typography & Form Styles --- */
+
+.application-content h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 4rem;
+    margin: 0 0 2rem 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.application-intro {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.8;
+    max-width: 650px; /* Constrain line length for readability */
+    margin: 0 auto 4rem auto; /* Center the paragraph and add space below */
+}
+
+.application-form-wrapper {
+    width: 100%;
+    border-top: 1px solid #eee; /* Subtle separator */
+    padding-top: 4rem; /* Space between separator and form */
+}
+
+.application-form-wrapper iframe {
+    width: 100%;
+    border: none;
+    min-height: 2000px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    .application-showcase {
+        padding: 60px 20px;
+    }
+
+    .application-content h1 {
+        font-size: 2.8rem;
+        letter-spacing: 1px;
+    }
+
+    .application-intro {
+        font-size: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .application-form-wrapper {
+        padding-top: 3rem;
+    }
+}

@@ -1,0 +1,628 @@
+/* === Font Definitions === */
+/*
+  This section tells the browser where to find the font files for the 'Roboto' family.
+  Each @font-face block defines a specific weight. The `font-display: swap` property
+  ensures that text is visible immediately using a fallback font, and then swaps
+  to Roboto once it has loaded.
+*/
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-Thin.woff2') format('woff2');
+    font-weight: 100; /* Thin */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-ExtraLight.woff2') format('woff2');
+    font-weight: 200; /* Extra-Light */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-Light.woff2') format('woff2');
+    font-weight: 300; /* Light */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-Regular.woff2') format('woff2');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-Medium.woff2') format('woff2');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Monochromatic Color Palette (Black, White, Gray) */
+:root {
+    --primary-color: #000; /* Black */
+    --secondary-color: #333; /* Dark Gray */
+    --light-gray: #ccc; /* Light Gray */
+    --background-color: #fff; /* White */
+    --hero-background-color: #f0f0f0; /* Light Gray for Hero */
+    --text-color: #000; /* Black */
+    --accent-color: #eee; /* Very Light Gray */
+    --header-h: 60px; /* Reduced from 83px for a thinner header */
+    --individual-image-width: 280px; /* Target width for each image in polaroid/editorial groups */
+}
+
+/* Apply a natural box layout model to all elements */
+html {
+    box-sizing: border-box;
+    height: 100%; /* Ensure html element itself tries to be full viewport height */
+    margin: 0;    /* Remove any default browser margin on html */
+    scroll-behavior: smooth; /* Enable smooth scrolling for anchor links */
+    overflow-y: scroll; /* Always show vertical scrollbar to prevent layout shifts */
+    -webkit-overflow-scrolling: touch; /* Enable smooth momentum scrolling on iOS */
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif; /* Set Roboto as the base font for consistency */
+    font-weight: 400; /* Use Regular weight for body text for better readability */
+    margin: 0; /* Remove default browser margin */
+    display: flex; /* Enable flexbox layout */
+    flex-direction: column; /* Stack children vertically */
+    min-height: 100vh; /* Ensure body takes at least full viewport height */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden; /* Continue to hide horizontal scrollbar */
+}
+
+/* Main content area */
+main {
+    flex-grow: 1; /* Allow main content to grow and fill available space */
+    padding-top: var(--header-h); /* Content starts directly below the fixed header */
+}
+
+/* Remove top padding from main on the homepage, as hero handles its own spacing */
+body.page-home main,
+body.page-about main,
+body.page-application main {
+    padding-top: 0;
+}
+
+.container {
+    max-width: 1400px; /* Wider container to spread content out more */
+    margin: 0 auto;
+    padding: 0 40px; /* Increased padding to spread out content */
+}
+
+h1, h2, h3 {
+    color: var(--primary-color); /* Let each heading define its own weight */
+}
+
+h2 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100; /* Use Thin weight for a light, airy heading style */
+    /* Fluid font-size: min, preferred, max */
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    letter-spacing: 1px;
+    font-weight: inherit; /* Links should inherit weight from their parent */
+}
+
+h2 {
+    margin-bottom: 0.75em; /* Scales with font-size, similar to previous px values */
+    text-transform: uppercase;
+    line-height: 1.4; /* Adjusted for better visual balance with uppercase */
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* General focus style for links to remove default outline and provide a subtle alternative */
+a:focus-visible {
+    outline: 2px solid var(--secondary-color); /* Consistent focus style */
+    color: var(--secondary-color); /* Match hover state for consistency */
+}
+
+/* Header */
+header {
+    padding: 7px 0px; /* Reduced vertical padding for a thinner header */
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background-color: var(--background-color);
+    z-index: 1000;
+}
+
+.logo {
+    font-family: 'Roboto', sans-serif; 
+    font-size: 2.5rem; /* Reduced from 2.5rem to fit the new thinner header */
+    font-weight: 100; /* Thin weight */
+    text-transform: uppercase;
+    margin: 0; /* Grid placement: Left column */
+    grid-column: 1 / 2;
+    justify-self: start;
+}
+
+nav {
+    display: block; /* Ensure nav takes up space */
+    /* Grid placement: Right column */
+    grid-column: 2 / 3;
+    justify-self: end;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center; /* Vertically align nav items */
+    gap: 20px;
+}
+
+nav ul li a {
+    font-family: 'Roboto', sans-serif; 
+    font-size: 1.1rem; /* Slightly larger than default */
+    font-weight: 300;
+    text-transform: uppercase; /* Make all letters uppercase */
+    letter-spacing: 1px; /* Add a little space between letters */
+    color: var(--text-color); /* Use variable */
+    text-decoration: none; /* Remove the underline */
+    transition: color 0.3s ease; /* Add a smooth color transition on hover */
+}
+
+nav ul li a:hover {
+    color: var(--secondary-color); /* Use variable */
+}
+
+/* Custom focus style for navigation links to replace the default outline */
+nav ul li a:focus-visible {
+    outline: none; /* Remove the default outline */
+    color: var(--secondary-color); /* Use the hover color for a subtle focus state */
+}
+
+/* Style for the moment a link is clicked, providing clean feedback */
+nav ul li a:active {
+    transform: translateY(1px); /* Subtle press-down effect */
+}
+/* Hero Section */
+.hero {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Dark overlay for text contrast */
+.hero-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.25); /* Subtle dark overlay */
+    z-index: 2;
+}
+
+.hero-image .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-image .video-container iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.hero-main-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: clamp(2.5rem, 10vw, 8rem); /* Adjusted for longer text */
+    color: var(--background-color);
+    text-transform: uppercase;
+    letter-spacing: clamp(2px, 1vw, 8px); /* Adjusted for longer text */
+    font-weight: 200;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    text-align: center; /* Ensure text is centered if it wraps */
+    padding: 0 20px; /* Add some horizontal padding to prevent touching screen edges */
+}
+
+.model-section h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100; /* Light weight for a clean, modern title */
+    font-size: 2.4rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem; /* Add space between the title and the model grid */
+}
+
+/* Modernized Model Grid */
+.model-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Reduced min-width for better mobile fit */
+    gap: 80px 40px; /* 80px row-gap, 40px column-gap */
+    margin-bottom: 50px;
+}
+
+@media (min-width: 1800px) {
+    .model-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.model-card {
+    display: block;
+    text-align: left;
+}
+
+.model-card-image {
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    margin-bottom: 1.25rem;
+    transition: opacity 0.3s ease;
+}
+
+.model-card:hover .model-card-image {
+    opacity: 0.85;
+}
+
+.model-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.model-card-name {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+/* Visually hidden heading for a11y */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.social-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Footer */
+
+footer {
+    font-family: 'Roboto', sans-serif; /* Use standard Roboto font */
+    font-weight: 300; /* Light weight for footer text */
+    background-color: var(--primary-color);
+    color: var(--background-color); /* Assuming white text on primary background */
+    text-align: center;
+    padding: 10px 0; /* Increased padding for better spacing */
+}
+
+.header-flex {
+    display: grid; /* Symmetrical two-column grid for logo and nav */
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    /* Ensure the container has a defined height to contain its children */
+    height: var(--header-h);
+}
+
+.header-socials {
+    position: absolute;
+    left: 50px; /* Fixed distance from the left edge of the viewport */
+    top: 50%;
+    transform: translateY(calc(-50% + 3px));
+    display: flex;
+}
+
+.social-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Hamburger styles */ /* These are the base styles for the hamburger, hidden by default */
+.hamburger {
+    display: none; /* Hidden by default, shown on mobile */
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+    width: 28px; /* Slightly larger for easier tapping */
+    height: 21px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0; /* Remove default padding */
+    /* Position hamburger absolutely, though it's hidden on desktop */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hamburger:focus {
+    /* Custom focus style for hamburger */
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background-color), 0 0 0 4px var(--secondary-color);
+    border-radius: 4px;
+}
+
+.gallery-image-btn {
+    border-radius: 0;
+}
+
+.gallery-image-btn:active {
+    transform: scale(0.99); /* Slightly shrink on click */
+}
+
+.hamburger .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-color);
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* Responsive font tweak */
+@media(max-width:640px){
+    /* Model page styles were reverted, so responsive tweaks are removed for now. */
+    .modal-content-wrapper { /* Adjust maximum size for modal on very small screens */
+        max-width: 90vw; /* Allow modal to take a larger portion of the screen */
+    }
+    .model-section h1 { /* Fluid font size for model section heading */
+        font-size: clamp(2rem, 7vw, 2.4rem);
+    }
+    .hero { /* Tighter spacing below header on smaller screens */
+        margin-top: calc(var(--header-h) - 5px);
+    }
+}
+
+/* --- Consolidated Media Queries --- */
+
+/* Tablet and below (<= 1024px) */
+@media (max-width: 1024px) {
+    .header-flex {
+        /* On tablet, switch to a simpler 2-column flex layout */
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-socials {
+        display: none; /* Hide social icon on tablet for a cleaner look */
+    }
+
+    .logo {
+        font-size: 2rem; /* Slightly smaller logo on tablet */
+        margin-left: 0; /* Remove margin on tablet */
+    }
+
+    nav {
+        margin-left: 0; /* Reset margin-left from desktop style */
+    }
+
+    /* Adjust model grid for tablets */
+    .model-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    }
+
+    /* Mobile Navigation Logic */
+    .hamburger {
+        display: flex; /* Show hamburger on tablet/mobile */
+        position: relative; /* Reset absolute positioning to flow in flex container */
+        right: auto;
+        top: auto;
+        transform: none;
+        z-index: 1002; /* Ensure it sits above the nav overlay */
+    }
+
+    /* Hamburger Animation */
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(100%); /* Hidden by default */
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth slide-in */
+        z-index: 1001;
+    }
+
+    nav.active {
+        transform: translateX(0); /* Slide in */
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    nav ul li a {
+        font-size: 2rem; /* Larger font for mobile touch targets */
+        font-weight: 100;
+    }
+}
+
+/* Mobile (<= 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px; /* Reduce padding on small screens */
+    }
+    
+    .model-grid {
+        gap: 40px 20px; /* Tighter gap for mobile */
+    }
+}
+
+/* === Modal / Lightbox Styles === */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 2000; /* High z-index to sit on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content-wrapper {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.close-modal-btn:hover,
+.close-modal-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 16px;
+    user-select: none;
+    transition: 0.3s;
+    z-index: 2001;
+}
+
+.prev-btn { left: 0; }
+.next-btn { right: 0; }
+
+.modal-nav-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    color: white;
+    flex-direction: column;
+    align-items: center;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #fff;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

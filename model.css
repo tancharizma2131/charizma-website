@@ -1,0 +1,153 @@
+/* === High-Fashion Model Portfolio (Desktop First) === */
+:root {
+    --sidebar-width: 340px; /* Slightly wider for better text flow */
+    --gap: 80px; /* More breathing room */
+}
+
+/* 
+  Desktop First: The base styles are for wide screens.
+*/
+.model-showcase {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 1800px; /* Allow for a wider, more cinematic layout */
+    margin: 0 auto;
+    padding: 100px 50px; /* Increased padding for an airy feel */
+    gap: var(--gap);
+}
+
+/* Sticky Sidebar */
+.model-details {
+    width: var(--sidebar-width);
+    position: sticky;
+    top: 140px; /* Adjust for more space from the header */
+    flex-shrink: 0;
+    margin-bottom: 0;
+}
+
+.model-details h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+
+/* 
+  Mobile Layout: When the screen is 899px or narrower,
+  override the desktop styles to create a stacked layout.
+*/
+@media (max-width: 899px) {
+    .model-showcase {
+        flex-direction: column;
+        padding: 20px 20px 40px;
+        gap: 0; /* No gap for stacked layout */
+    }
+
+    .model-details {
+        width: 100%;
+        position: static; /* Remove stickiness on mobile */
+        margin-bottom: 40px;
+    }
+
+    .model-name {
+        font-size: clamp(3rem, 12vw, 4rem) !important; /* Fluid scaling to prevent overflow */
+    }
+
+    .model-feed {
+        grid-template-columns: 1fr !important; /* Single column on mobile */
+        gap: 20px !important;
+    }
+}
+
+/* --- Typography & Details --- */
+
+.model-name {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 6rem; /* WOW FACTOR: A much larger, more impactful name */
+    line-height: 0.9;
+    margin: 0 0 2.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.model-stats {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.5rem 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-top: 1px solid #eee; /* A subtle separator */
+}
+
+.model-stats li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.model-stats li span {
+    font-weight: normal; /* Revert previous bolding */
+    opacity: 0.6; /* Make the label more subtle */
+    margin-right: 20px;
+}
+
+.model-bio {
+    margin-bottom: 2.5rem;
+    font-size: 1rem; /* Slightly larger for better readability */
+    line-height: 1.8;
+    color: #333;
+}
+
+.social-link {
+    display: inline-block;
+    color: #000;
+    text-decoration: none;
+    border-bottom: 1px solid #ddd;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    transition: border-color 0.3s;
+}
+
+.social-link:hover {
+    border-color: #000;
+}
+
+/* Image Feed */
+.model-feed {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* A clean, elegant two-column grid */
+    gap: 40px; /* Generous gap between images */
+    width: 100%;
+}
+
+.model-feed img {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: zoom-in;
+    transition: opacity 0.4s ease;
+}
+
+.model-feed img:hover {
+    opacity: 0.9;
+}
+
+/* Section Title for Digitals/Polaroids */
+.feed-section-title {
+    grid-column: 1 / -1; /* Span full width of the grid */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 60px;
+    border-top: 1px solid #eee;
+    color: var(--primary-color);
+}

@@ -1,0 +1,19 @@
+{
+  "name": "charizma-image-processing",
+  "version": "1.0.0",
+  "description": "A script to automate image optimization for the Charizma website.",
+  "main": "process-images.js",
+  "type": "module",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "glob": "^10.3.10",
+    "jsdom": "^24.0.0",
+    "sharp": "^0.33.2"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "terser": "^5.43.1"
+  }
+}

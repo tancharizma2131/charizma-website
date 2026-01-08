@@ -1,0 +1,144 @@
+/* === About Page - High Fashion Layout (Desktop First) === */
+
+/* 
+  Desktop First: The base styles are for wide screens.
+*/
+.about-showcase {
+    display: flex;
+    flex-direction: row;
+    /* 
+      Fill the viewport height from below the header.
+      The var(--header-h, 80px) provides a fallback value.
+    */
+    min-height: 100vh; 
+}
+
+.about-feed,
+.about-details {
+    flex: 1 1 50%; /* Each column takes up 50% of the width */
+    box-sizing: border-box;
+    position: relative;
+}
+
+.about-feed img {
+    width: 100%;
+    height: 100%; /* Image fills the full height of its container */
+    object-fit: cover; /* Cover the area, cropping as needed */
+    display: block;
+}
+
+.about-details {
+    padding: 100px 80px; /* Generous padding for a luxe feel */
+    overflow-y: auto; /* Allow text to scroll if content is long */
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 
+  Mobile Layout: When the screen is 899px or narrower,
+  override the desktop styles to create a stacked layout.
+*/
+@media (max-width: 899px) {
+    .about-showcase {
+        flex-direction: column; /* Stack image and text vertically */
+        min-height: 0; /* Let height be natural on mobile */
+    }
+
+    .about-feed,
+    .about-details {
+        flex-basis: auto; /* Reset flex-basis */
+        width: 100%;
+    }
+
+    .about-feed img {
+        height: auto; /* Let image height be natural */
+    }
+
+    .about-details {
+        padding: 40px 20px; /* Add mobile-specific padding */
+    }
+}
+.about-details h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 3.8rem; /* Slightly adjusted for the new layout */
+    margin: 0 0 2.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
+}
+
+/* Lead paragraph style */
+.about-bio p:first-of-type {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    line-height: 1.7;
+}
+
+.about-bio p {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 0.95rem; /* Slightly smaller for a more refined feel */
+    line-height: 1.9; /* More open line spacing */
+    color: #444;
+    margin-bottom: 1.75rem;
+    max-width: 550px; /* Constrain line length for readability */
+}
+
+.about-details hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 3rem 0;
+    max-width: 550px;
+}
+
+.about-details h2 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400; /* Regular weight for subheading */
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+}
+
+.contact-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    max-width: 550px;
+}
+
+.contact-details li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.contact-details .contact-label {
+    font-weight: 500; /* Medium weight for labels */
+    opacity: 1;
+    color: #000;
+    text-transform: none; /* Revert uppercase */
+    letter-spacing: 0;
+    padding-right: 0;
+}
+
+.contact-details a,
+.contact-details .contact-value {
+    word-break: break-all;
+    color: #555;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 300;
+}
+
+.contact-details a:hover {
+    color: #000;
+    border-bottom: 1px solid #000;
+}
