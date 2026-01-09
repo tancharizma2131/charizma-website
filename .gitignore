@@ -1,4 +1,15 @@
 node_modules/
-.DS_Store
-.env
-*.log
+.next/
+.env*
+# Large media & archives
+*.zip
+*.mov
+*.mp4
+*.pdf
+
+# Portfolio exports
+image/**/Portfolio*
+video/**
+
+# Vercel
+.vercel
