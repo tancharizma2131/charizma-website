@@ -8,8 +8,9 @@ node_modules/
 *.pdf
 
 # Portfolio exports
-image/**/Portfolio*
 video/**
 
 # Vercel
 .vercel
+
+.DS_Store

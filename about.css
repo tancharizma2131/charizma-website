@@ -67,14 +67,6 @@
     line-height: 1.1;
 }
 
-/* Lead paragraph style */
-.about-bio p:first-of-type {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.1rem;
-    color: var(--primary-color);
-    line-height: 1.7;
-}
-
 .about-bio p {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;

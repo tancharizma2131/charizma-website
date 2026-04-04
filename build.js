@@ -82,7 +82,7 @@ async function processImages() {
                 const webpOutputPath = `${sanitizedBasePath}-${size}.webp`;
 
                 await image.clone().resize({ width: size }).jpeg({ quality: JPEG_QUALITY }).toFile(jpegOutputPath);
-                await image.clone().resize({ width: size }).webp({ quality: WEBP_QUALITY }).toFile(webpOutputPath);
+                await image.clone().resize({ width: size }).webp({ quality: WEBP_QUALITY, effort: 6 }).toFile(webpOutputPath);
             }
             processedCount++;
         } catch (e) {
@@ -218,13 +218,30 @@ async function updateHtmlFiles() {
             fileWasModified = true;
         }
 
+        // Add Font Preloading for Performance
+        const head = document.querySelector('head');
+        if (head) {
+            const fontsToPreload = ['/fonts/Roboto-Thin.woff2', '/fonts/Roboto-Regular.woff2'];
+            fontsToPreload.forEach(fontPath => {
+                if (!head.querySelector(`link[href="${fontPath}"][rel="preload"]`)) {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.href = fontPath;
+                    link.as = 'font';
+                    link.type = 'font/woff2';
+                    link.crossOrigin = 'anonymous';
+                    head.prepend(link);
+                }
+            });
+        }
+
         // Update image tags only on model pages
         const isModelPage = !EXCLUDE_FILES.includes(path.basename(file));
         let imagesUpdatedInFile = 0;
         if (isModelPage) {
         const imagesToUpdate = Array.from(document.querySelectorAll('.model-gallery img, .model-grid img, .model-feed img'));
 
-        for (const img of imagesToUpdate) {
+        imagesToUpdate.forEach((img, index) => {
             // If the image is already in a picture tag, unwrap it so we can re-process it cleanly.
             // This makes the script idempotent and corrects previous bad runs.
             const parentPicture = img.closest('picture');
@@ -233,7 +250,7 @@ async function updateHtmlFiles() {
             }
 
             const originalSrc = img.getAttribute('src');
-            if (!originalSrc) continue;
+            if (!originalSrc) return;
 
             try {
                 const decodedSrc = decodeURI(originalSrc);
@@ -263,10 +280,17 @@ async function updateHtmlFiles() {
                 img.setAttribute('sizes', sizesAttr); // Set sizes on <img> for modern browsers.
                 img.setAttribute('data-base-src', encodeURI(sanitizedBasePath));
 
-                if (img.closest('.headshots')) {
+                // Performance Optimization: The first image is likely the LCP element.
+                // We prioritize it and prevent lazy-loading.
+                if (index === 0) {
+                    img.setAttribute('fetchpriority', 'high');
                     img.removeAttribute('loading');
-                } else if (!img.hasAttribute('loading')) {
-                    img.setAttribute('loading', 'lazy');
+                } else {
+                    if (img.closest('.headshots')) {
+                        img.removeAttribute('loading');
+                    } else if (!img.hasAttribute('loading')) {
+                        img.setAttribute('loading', 'lazy');
+                    }
                 }
 
                 img.parentNode.replaceChild(picture, img);
@@ -277,9 +301,8 @@ async function updateHtmlFiles() {
                 fileWasModified = true;
             } catch (e) {
                 console.error(`  - Could not update HTML for image "${originalSrc}" in ${file}. Is the source file missing? Skipping. Error: ${e.message}`);
-                continue;
             }
-        }
+        });
         }
 
         if (fileWasModified) {
