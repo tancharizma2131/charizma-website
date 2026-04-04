@@ -19,10 +19,13 @@ const EXCLUDE_FILES = ['index.html', 'about.html', 'be-charizmatic.html'];
  */
 async function clean() {
     console.log('\n--- Step 1: Cleaning up old build artifacts ---');
+    // Use a robust pattern to catch all resized images ([filename]-[number].[ext])
     const generatedFilePatterns = [
-        `image/models/**/*-{${SIZES.join(',')}}.{jpg,webp}`,
+        'image/models/**/*-[0-9]*.{jpg,jpeg,webp,png,JPG,JPEG,WEBP,PNG}',
         './style.min.css',
+        './style.min.css.map',
         './js/main.min.js',
+        './js/main.min.js.map',
     ];
     const filesToDelete = await glob(generatedFilePatterns);
 
@@ -41,7 +44,23 @@ async function clean() {
             console.error(`  - Error deleting ${file}: ${e.message}`);
         }
     }
-    console.log(`Cleanup complete! Deleted ${deletedCount} files.`);
+
+    // Clean up empty directories in image/models that might have been created during sanitization
+    const allDirs = await glob('image/models/**/', { posix: true });
+    let dirCount = 0;
+    for (const dir of allDirs.reverse()) { // Reverse to handle nested empty folders first
+        try {
+            const files = await fs.readdir(dir);
+            if (files.length === 0) {
+                await fs.rmdir(dir);
+                dirCount++;
+            }
+        } catch (e) {
+            // Directory not empty or already gone
+        }
+    }
+
+    console.log(`Cleanup complete! Deleted ${deletedCount} files and ${dirCount} empty directories.`);
 }
 
 /**
