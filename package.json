@@ -5,7 +5,9 @@
   "main": "process-images.js",
   "type": "module",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "clean": "node build.js --clean-only",
+    "watch": "nodemon --watch style.css --watch js/main.js --ext css,js --exec \"node build.js --skip-images\""
   },
   "dependencies": {
     "glob": "^10.3.10",
@@ -14,6 +16,7 @@
   },
   "devDependencies": {
     "clean-css": "^5.3.3",
-    "terser": "^5.43.1"
+    "terser": "^5.43.1",
+    "nodemon": "^3.1.0"
   }
 }

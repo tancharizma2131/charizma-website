@@ -323,9 +323,22 @@ async function updateHtmlFiles() {
  * Runs the entire build process in sequence.
  */
 async function runBuild() {
-    console.log('Starting full build process...');
-    await clean();
-    await processImages();
+    const skipImages = process.argv.includes('--skip-images');
+    const cleanOnly = process.argv.includes('--clean-only');
+
+    if (cleanOnly) {
+        await clean();
+        console.log('✨ Cleaned up generated artifacts. Storage should be recovered.');
+        return;
+    }
+
+    if (skipImages) {
+        console.log('🚀 Starting light build (skipping images)...');
+    } else {
+        console.log('🚀 Starting full build process...');
+        await clean();
+        await processImages();
+    }
     await minifyCSS();
     await minifyJS();
     await updateHtmlFiles();
