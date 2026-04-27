@@ -41,6 +41,7 @@
     .about-showcase {
         flex-direction: column; /* Stack image and text vertically */
         min-height: 0; /* Let height be natural on mobile */
+        padding-top: 120px; /* Increased space to bring content further down on mobile */
     }
 
     .about-feed,

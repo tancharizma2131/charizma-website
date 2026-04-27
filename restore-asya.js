@@ -24,7 +24,7 @@ async function restore() {
     const existingImages = Array.from(doc.querySelectorAll('.model-feed img'))
         .map(img => {
             let src = img.getAttribute('data-base-src') || img.src;
-            src = src.replace(/-\d+$/, '');
+            src = src.replace(/-\d+\.(jpg|jpeg|png|webp)$/i, '');
             return src;
         });
         
@@ -35,7 +35,7 @@ async function restore() {
         const name = path.parse(filename).name;
         
         const isPresent = existingImages.some(src => src.includes(name));
-        
+
         if (!isPresent) {
             const relativePath = imgPath.replace(/\\/g, '/');
             const basePath = relativePath.substring(0, relativePath.lastIndexOf('.'));

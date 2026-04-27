@@ -1,7 +1,7 @@
 /* === High-Fashion Model Portfolio (Desktop First) === */
 :root {
     --sidebar-width: 340px; /* Slightly wider for better text flow */
-    --gap: 80px; /* More breathing room */
+    --gap: 60px; /* Reduced for better screen utilization */
 }
 
 /* 
@@ -13,7 +13,8 @@
     align-items: flex-start;
     max-width: 1800px; /* Allow for a wider, more cinematic layout */
     margin: 0 auto;
-    padding: 100px 50px; /* Increased padding for an airy feel */
+    padding: 60px 50px; /* Reduced from 100px to bring content closer to header */
+    min-height: calc(100vh - var(--header-h)); /* Ensure container is tall enough for sticky behavior */
     gap: var(--gap);
 }
 
@@ -21,8 +22,12 @@
 .model-details {
     width: var(--sidebar-width);
     position: sticky;
-    top: 140px; /* Adjust for more space from the header */
+    top: calc(var(--header-h) + 40px); /* Anchor for short sidebars */
+    bottom: 40px; /* Anchor for long sidebars */
     flex-shrink: 0;
+    height: fit-content; /* Crucial: prevents the sidebar from stretching to match the grid height */
+    align-self: flex-start; /* Crucial: ensures sidebar height isn't forced to match image grid */
+    z-index: 10; /* Ensure it stays above images during scroll */
     margin-bottom: 0;
 }
 
@@ -38,7 +43,7 @@
 @media (max-width: 899px) {
     .model-showcase {
         flex-direction: column;
-        padding: 20px 20px 40px;
+        padding: 60px 20px 40px; /* Increased top padding to prevent content from hiding under the fixed header */
         gap: 0; /* No gap for stacked layout */
     }
 
@@ -53,8 +58,13 @@
     }
 
     .model-feed {
-        grid-template-columns: 1fr !important; /* Single column on mobile */
-        gap: 20px !important;
+        grid-template-columns: repeat(2, 1fr) !important; /* 2 columns on mobile for better overview */
+        gap: 10px !important; /* Tighter gap on mobile */
+    }
+
+    .feed-section-title {
+        margin-top: 10px !important;
+        padding-top: 30px !important;
     }
 }
 
@@ -105,7 +115,7 @@
     display: inline-block;
     color: #000;
     text-decoration: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #eee;
     text-transform: uppercase;
     font-size: 0.8rem;
     letter-spacing: 1px;
@@ -116,13 +126,80 @@
     border-color: #000;
 }
 
+.jump-link {
+    display: block;
+    width: fit-content;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #000;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+    transition: border-color 0.3s;
+}
+
+.jump-link:hover {
+    border-color: #000;
+}
+
 /* Image Feed */
 .model-feed {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* A clean, elegant two-column grid */
-    gap: 40px; /* Generous gap between images */
+    /* Define 5 columns: [Pair 1] [Pair 1] [Center Gutter] [Pair 2] [Pair 2] */
+    grid-template-columns: 1fr 1fr 40px 1fr 1fr; 
+    grid-auto-flow: dense; /* Automatically fills gaps created by landscape images */
+    gap: 15px 15px; /* Row gap and internal column gap */
     width: 100%;
+}
+
+/* Container for portfolio and digitals next to the sidebar */
+.model-content-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 60px; /* Space between Portfolio and Digitals */
+}
+
+/* Spacing for the Digitals section when nested inside the content column */
+.digitals-section {
+    width: 100%;
+}
+
+/* Use a pseudo-element to block the middle column, creating the "two and two" split */
+.model-feed::before {
+    content: '';
+    grid-column: 3;
+    grid-row: 1 / span 100; /* Reduced from 1000 to prevent infinite height issues in some browsers */
+    pointer-events: none;
+}
+
+/* On medium screens (tablets), drop to 2 columns */
+@media (min-width: 900px) and (max-width: 1200px) {
+    .model-feed {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .model-feed::before {
+        display: none; /* Remove the gutter split on tablet */
+    }
+}
+
+/* Spanning for Landscape Images */
+.model-feed picture.landscape {
+    grid-column: span 2; /* Landscapes take up two columns on desktop */
+}
+
+@media (max-width: 899px) {
+    .model-feed picture.landscape {
+        grid-column: span 2; /* Landscapes take up full width on 2-column mobile */
+    }
+
+    .model-feed::before {
+        display: none; /* Ensure gutter is removed on mobile */
+    }
 }
 
 .model-feed img {

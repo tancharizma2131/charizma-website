@@ -125,7 +125,7 @@ function getSizesAttribute(img) {
     }
 
     if (img.closest('.model-feed')) {
-        return '(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw';
+        return '(max-width: 600px) 48vw, (max-width: 1024px) 31vw, 23vw';
     }
 
     const galleryGrid = img.closest('.gallery-grid');
@@ -260,7 +260,7 @@ async function updateHtmlFiles() {
         if (isModelPage) {
         const imagesToUpdate = Array.from(document.querySelectorAll('.model-gallery img, .model-grid img, .model-feed img'));
 
-        imagesToUpdate.forEach((img, index) => {
+        for (const [index, img] of imagesToUpdate.entries()) {
             // If the image is already in a picture tag, unwrap it so we can re-process it cleanly.
             // This makes the script idempotent and corrects previous bad runs.
             const parentPicture = img.closest('picture');
@@ -269,7 +269,7 @@ async function updateHtmlFiles() {
             }
 
             const originalSrc = img.getAttribute('src');
-            if (!originalSrc) return;
+            if (!originalSrc) continue;
 
             try {
                 const decodedSrc = decodeURI(originalSrc);
@@ -286,9 +286,30 @@ async function updateHtmlFiles() {
                 while(sizeSuffixRegex.test(basePath)) {
                     basePath = basePath.replace(sizeSuffixRegex, '');
                 }
+                
+                // Look for the source file to verify it exists
+                // We allow for spaces in the filesystem that might be represented as hyphens in the HTML
+                const fuzzyBasePath = basePath.replace(/-/g, '{-, }');
+                const sourcePattern = `${fuzzyBasePath}.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}`;
+                
+                let sourceFiles = await glob(sourcePattern);
+                
+                if (sourceFiles.length === 0) {
+                    console.warn(`  ⚠️  Warning: Source image not found for "${basePath}" in ${file}.`);
+                    console.warn(`      The script cannot regenerate optimized versions without the original file.`);
+                    continue;
+                }
 
-                // Now, sanitize the clean base path by replacing spaces with hyphens.
-                const sanitizedBasePath = basePath.replace(/\s+/g, '-');
+                // Detect orientation automatically
+                const metadata = await sharp(sourceFiles[0]).metadata();
+                const isLandscape = metadata.width > metadata.height;
+                if (isLandscape) {
+                    picture.classList.add('landscape');
+                }
+
+                // Sanitize the clean base path by replacing spaces with hyphens.
+                // We also decodeURI to handle any encoded spaces in the HTML src.
+                const sanitizedBasePath = decodeURI(basePath).replace(/\s+/g, '-');
 
                 const webpSource = createSourceElement(document, sanitizedBasePath, 'webp');
                 const jpegSource = createSourceElement(document, sanitizedBasePath, 'jpeg');
@@ -321,7 +342,7 @@ async function updateHtmlFiles() {
             } catch (e) {
                 console.error(`  - Could not update HTML for image "${originalSrc}" in ${file}. Is the source file missing? Skipping. Error: ${e.message}`);
             }
-        });
+        }
         }
 
         if (fileWasModified) {

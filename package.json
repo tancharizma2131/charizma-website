@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node build.js",
+    "check": "node check-missing-images.js",
     "clean": "node build.js --clean-only",
     "watch": "nodemon --watch style.css --watch js/main.js --ext css,js --exec \"node build.js --skip-images\""
   },

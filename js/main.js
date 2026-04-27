@@ -172,6 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Model Feed Lightbox Logic ---
         initializeModelLightbox();
 
+        // --- Visibility Logic for Empty Sections ---
+        handleEmptySections();
+
+        // --- Mobile Hover/Tap Logic for Roster ---
+        initializeMobileHover();
+
         function initializeModelLightbox() {
             const modelFeed = document.querySelector('.model-feed');
             if (!modelFeed) return;
@@ -187,6 +193,63 @@ document.addEventListener('DOMContentLoaded', () => {
                     modal.style.display = 'flex';
                     showImage(index);
                 });
+            });
+        }
+
+        function handleEmptySections() {
+            const digitalsHeader = document.getElementById('digitals');
+            const jumpLink = document.querySelector('.jump-link');
+            
+            if (!digitalsHeader) { // If there's no #digitals header, hide the jump link and exit
+                if (jumpLink) jumpLink.style.display = 'none';
+                return;
+            }
+
+            // Find the parent .digitals-section
+            const digitalsSection = digitalsHeader.closest('.digitals-section');
+            if (!digitalsSection) { // Fallback if structure is not as expected
+                if (jumpLink) jumpLink.style.display = 'none';
+                digitalsHeader.style.display = 'none';
+                return;
+            }
+
+            // Check for images or pictures within the .model-feed inside this .digitals-section
+            const digitalFeed = digitalsSection.querySelector('.model-feed');
+            const hasImages = digitalFeed && digitalFeed.querySelector('img, picture');
+
+            if (!hasImages) {
+                if (jumpLink) jumpLink.style.display = 'none';
+                digitalsHeader.style.display = 'none';
+                digitalsSection.style.display = 'none'; // Hide the entire section if no images
+            }
+        }
+
+        function initializeMobileHover() {
+            const modelCards = document.querySelectorAll('.model-card');
+            
+            modelCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Check if the user is on a touch device
+                    if (window.matchMedia("(pointer: coarse)").matches) {
+                        if (!this.classList.contains('touch-active')) {
+                            // First tap: prevent navigation and show stats
+                            e.preventDefault();
+                            
+                            // Remove active state from other cards for a clean UI
+                            modelCards.forEach(c => c.classList.remove('touch-active'));
+                            
+                            this.classList.add('touch-active');
+                        }
+                        // If already active, the second tap follows the link naturally
+                    }
+                });
+            });
+
+            // Hide stats when tapping outside a card
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.model-card')) {
+                    modelCards.forEach(c => c.classList.remove('touch-active'));
+                }
             });
         }
     }

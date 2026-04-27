@@ -62,8 +62,8 @@
 /* Apply a natural box layout model to all elements */
 html {
     box-sizing: border-box;
-    height: 100%; /* Ensure html element itself tries to be full viewport height */
-    margin: 0;    /* Remove any default browser margin on html */
+    margin: 0;
+    height: auto; /* Ensure height is determined by content for sticky stability */
     scroll-behavior: smooth; /* Enable smooth scrolling for anchor links */
     overflow-y: scroll; /* Always show vertical scrollbar to prevent layout shifts */
     -webkit-overflow-scrolling: touch; /* Enable smooth momentum scrolling on iOS */
@@ -84,7 +84,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    overflow-x: hidden; /* Continue to hide horizontal scrollbar */
+    overflow-x: clip; /* Prevents horizontal scroll without breaking position: sticky */
 }
 
 /* Main content area */
@@ -274,12 +274,13 @@ nav ul li a:active {
 
 .model-section h1 {
     font-family: 'Roboto', sans-serif;
-    font-weight: 100; /* Light weight for a clean, modern title */
-    font-size: 2.4rem;
+    font-weight: 100; /* Match About page weight */
+    font-size: 3.8rem; /* Match About page size */
+    line-height: 1.1;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 1.5rem; /* Add space between the title and the model grid */
+    letter-spacing: 1.5px;
+    margin-bottom: 2.5rem;
 }
 
 /* Modernized Model Grid */
@@ -302,6 +303,7 @@ nav ul li a:active {
 }
 
 .model-card-image {
+    position: relative;
     overflow: hidden;
     aspect-ratio: 3 / 4;
     margin-bottom: 1.25rem;
@@ -310,6 +312,35 @@ nav ul li a:active {
 
 .model-card:hover .model-card-image {
     opacity: 0.85;
+}
+
+.model-card-stats {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* Subtle white overlay */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none; /* Ensures the link underneath is still clickable */
+}
+
+.model-card:hover .model-card-stats,
+.model-card.touch-active .model-card-stats {
+    opacity: 1;
+}
+
+.model-card-stats span {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 2px 0;
+    color: #000;
 }
 
 .model-card-image img {
@@ -322,7 +353,7 @@ nav ul li a:active {
 .model-card-name {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin: 0;
@@ -430,7 +461,7 @@ footer {
         max-width: 90vw; /* Allow modal to take a larger portion of the screen */
     }
     .model-section h1 { /* Fluid font size for model section heading */
-        font-size: clamp(2rem, 7vw, 2.4rem);
+        font-size: clamp(2.5rem, 8vw, 3.8rem);
     }
     .hero { /* Tighter spacing below header on smaller screens */
         margin-top: calc(var(--header-h) - 5px);
@@ -516,6 +547,13 @@ footer {
     nav ul li a {
         font-size: 2rem; /* Larger font for mobile touch targets */
         font-weight: 100;
+    }
+}
+
+/* Mobile & Tablet Spacing (<= 899px) */
+@media (max-width: 899px) {
+    .model-section {
+        padding-top: 40px; /* Reduced from 60px to bring the roster titles up slightly on mobile */
     }
 }
 
