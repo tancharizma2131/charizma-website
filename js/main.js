@@ -26,21 +26,26 @@ const headerHTML = `
 
 const footerHTML = `
 <div class="container">
-    <p>&copy; 2025 Charizma Management</p>
+    <p>&copy; <span id="footer-year"></span> Charizma Management <span class="footer-credit">&middot; Site by Folio Lab</span></p>
 </div>
 `;
 
 const modalHTML = `
-<div id="imageModal" class="modal">
-  <span class="close-modal-btn">&times;</span>
-  <span class="prev-btn modal-nav-btn">&#10094;</span>
-  <span class="next-btn modal-nav-btn">&#10095;</span>
+<div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-label="Image gallery" tabindex="-1">
+  <button type="button" class="close-modal-btn" aria-label="Close image gallery">&times;</button>
+  <button type="button" class="prev-btn modal-nav-btn" aria-label="Previous image">&#10094;</button>
+  <button type="button" class="next-btn modal-nav-btn" aria-label="Next image">&#10095;</button>
   <div class="modal-content-wrapper">
     <div class="loading-indicator">
         <div class="spinner"></div>
     </div>
     <img class="modal-content" id="modalImage" alt="Enlarged view" style="display: none;">
   </div>
+  <a class="modal-download-link" href="#" download aria-label="Download comp card as PNG" title="Download PNG">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14" />
+    </svg>
+  </a>
 </div>
 `;
 
@@ -52,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (headerEl) headerEl.innerHTML = headerHTML;
     if (footerEl) footerEl.innerHTML = footerHTML;
     if (bodyEndEl) bodyEndEl.innerHTML = modalHTML;
+
+    const footerYear = document.querySelector('#footer-year');
+    if (footerYear) footerYear.textContent = new Date().getFullYear();
 
     // All components are loaded, now run the scripts
     initializePageScripts();
@@ -98,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeModalBtn = modal.querySelector(".close-modal-btn");
         const prevBtn = modal.querySelector(".prev-btn");
         const nextBtn = modal.querySelector(".next-btn");
+        const downloadLink = modal.querySelector(".modal-download-link");
 
         let imagesToPopup = []; // This will be populated by initializeModelLightbox
         let currentImageIndex = 0;
@@ -108,6 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (index < 0) index = imagesToPopup.length - 1; // Loop to end
             
             const img = imagesToPopup[index];
+            modal.classList.remove('comp-card-modal');
+            downloadLink.style.display = 'none';
+            prevBtn.style.display = '';
+            nextBtn.style.display = '';
             // Use getAttribute to get the relative path as written in the HTML.
             const originalSrc = img.getAttribute('src');
             modalImg.alt = img.alt;
@@ -137,6 +150,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             currentImageIndex = index;
+            modal.focus();
+        }
+
+        function showCompCard(link) {
+            const compCardSrc = link.getAttribute('href');
+            const modelName = link.dataset.modelName || 'Model';
+
+            lastFocusedElement = link;
+            modal.classList.add('comp-card-modal');
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            downloadLink.style.display = 'inline-flex';
+            downloadLink.href = compCardSrc;
+            downloadLink.setAttribute('download', `${modelName}_CompCard.png`);
+            downloadLink.setAttribute('aria-label', `Download ${modelName} comp card as PNG`);
+            modalImg.alt = `${modelName} comp card`;
+
+            loadingIndicator.style.display = 'flex';
+            modalImg.style.display = 'none';
+            modalImg.onload = function() {
+                loadingIndicator.style.display = 'none';
+                modalImg.style.display = 'block';
+            };
+            modalImg.onerror = function() {
+                loadingIndicator.innerHTML = '<span>Could not load comp card.</span>';
+                modalImg.style.display = 'none';
+            };
+            modalImg.src = compCardSrc;
+            modal.style.display = 'flex';
+            modal.focus();
         }
 
         function closeModal() {
@@ -172,6 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Model Feed Lightbox Logic ---
         initializeModelLightbox();
 
+        document.querySelectorAll('.comp-card-link').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                showCompCard(link);
+            });
+        });
+
         // --- Visibility Logic for Empty Sections ---
         handleEmptySections();
 
@@ -179,16 +229,15 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeMobileHover();
 
         function initializeModelLightbox() {
-            const modelFeed = document.querySelector('.model-feed');
-            if (!modelFeed) return;
-    
-            // Select all images in the feed
-            const images = Array.from(modelFeed.querySelectorAll('img'));
+            const images = Array.from(document.querySelectorAll('.model-feed img'));
+            if (images.length === 0) return;
+
             imagesToPopup = images; // Update global variable for modal logic
     
             images.forEach((img, index) => {
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    lastFocusedElement = img;
                     const modal = document.getElementById("imageModal");
                     modal.style.display = 'flex';
                     showImage(index);

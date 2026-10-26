@@ -1,19 +1,17 @@
 {
-  "name": "charizma-image-processing",
+  "name": "charizma-management-site",
   "version": "1.0.0",
-  "description": "A script to automate image optimization for the Charizma website.",
-  "main": "process-images.js",
+  "description": "Static website for Charizma Management.",
+  "main": "build.js",
   "type": "module",
   "scripts": {
     "build": "node build.js",
-    "check": "node check-missing-images.js",
-    "clean": "node build.js --clean-only",
-    "watch": "nodemon --watch style.css --watch js/main.js --ext css,js --exec \"node build.js --skip-images\""
+    "check": "node check-missing-images.js && node check-digitals.js",
+    "watch": "nodemon --watch style.css --watch js/main.js --ext css,js --exec \"node build.js\""
   },
   "dependencies": {
     "glob": "^10.3.10",
-    "jsdom": "^24.0.0",
-    "sharp": "^0.33.2"
+    "jsdom": "^24.0.0"
   },
   "devDependencies": {
     "clean-css": "^5.3.3",

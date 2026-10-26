@@ -386,6 +386,14 @@ footer {
     padding: 10px 0; /* Increased padding for better spacing */
 }
 
+footer p {
+    margin: 0;
+}
+
+.footer-credit {
+    opacity: 0.75;
+}
+
 .header-flex {
     display: grid; /* Symmetrical two-column grid for logo and nav */
     grid-template-columns: 1fr 1fr;
@@ -610,6 +618,9 @@ footer {
     transition: 0.3s;
     cursor: pointer;
     z-index: 2001;
+    border: 0;
+    background: transparent;
+    line-height: 1;
 }
 
 .close-modal-btn:hover,
@@ -631,6 +642,9 @@ footer {
     user-select: none;
     transition: 0.3s;
     z-index: 2001;
+    border: 0;
+    background: transparent;
+    line-height: 1;
 }
 
 .prev-btn { left: 0; }
@@ -638,6 +652,61 @@ footer {
 
 .modal-nav-btn:hover {
     background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-download-link {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 82px;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    text-decoration: none;
+    z-index: 2002;
+    transition: color 0.25s, opacity 0.25s;
+}
+
+.modal-download-link svg {
+    width: 27px;
+    height: 27px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.modal-download-link:hover,
+.modal-download-link:focus {
+    color: #bbb;
+}
+
+.comp-card-modal .modal-content-wrapper {
+    max-width: min(94vw, 1748px);
+    max-height: calc(100vh - 100px);
+}
+
+.comp-card-modal .modal-content {
+    max-height: calc(100vh - 100px);
+}
+
+@media (max-width: 600px) {
+    .comp-card-modal {
+        align-items: flex-start;
+        padding-top: 70px;
+    }
+
+    .comp-card-modal .modal-content-wrapper,
+    .comp-card-modal .modal-content {
+        max-height: calc(100vh - 150px);
+    }
+
 }
 
 .loading-indicator {
