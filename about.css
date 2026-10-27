@@ -41,7 +41,7 @@
     .about-showcase {
         flex-direction: column; /* Stack image and text vertically */
         min-height: 0; /* Let height be natural on mobile */
-        padding-top: 120px; /* Increased space to bring content further down on mobile */
+        padding-top: 0;
     }
 
     .about-feed,
@@ -61,7 +61,7 @@
 .about-details h1 {
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
-    font-size: 3.8rem; /* Slightly adjusted for the new layout */
+    font-size: clamp(2rem, 8vw, 3.8rem);
     margin: 0 0 2.5rem 0;
     text-transform: uppercase;
     letter-spacing: 1.5px;

@@ -1,0 +1,32 @@
+/* A quiet editorial board, with clear access to every portfolio. */
+.page-roster { background: #faf9f6; }
+.page-roster header { background: #faf9f6; }
+.page-roster .model-section { padding: 52px 0 80px; }
+.page-roster .model-section > .container { max-width: 1320px; padding: 0 64px; }
+.page-roster .model-section h1 { height: auto; font: italic 48px/1.1 Georgia, serif; text-transform: none; text-align: left; letter-spacing: -1px; margin: 0 0 44px; padding-bottom: 24px; border-bottom: 1px solid #d9d7d2; }
+.page-roster .model-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 38px; margin-bottom: 0; align-items: start; }
+.page-roster .model-card:nth-child(even) { margin-top: 36px; }
+.page-roster .model-card-image { aspect-ratio: 3 / 4; margin-bottom: 15px; }
+.page-roster .model-card:hover .model-card-image { opacity: 1; }
+.page-roster .model-card-image img { object-position: center 30%; }
+.page-roster .model-card-name { font: italic 26px/1.2 Georgia, serif; text-transform: none; letter-spacing: 0; }
+.page-roster .model-card-stats { background: #faf9f6e8; }
+.page-roster .model-card-stats span { font-size: 10px; letter-spacing: 1px; }
+.roster-men .model-grid { grid-template-columns: minmax(0, 300px); justify-content: center; }
+.roster-men .model-card-image { aspect-ratio: 3 / 4; }
+.page-roster footer { background: #faf9f6; color: #666; text-align: left; border-top: 1px solid #d9d7d2; padding: 22px 0; font-size: 10px; }
+@media (max-width: 1024px) {
+    .page-roster .model-section > .container { padding: 0 36px; }
+    .page-roster .model-grid { gap: 24px; }
+}
+@media (max-width: 700px) {
+    .page-roster .model-section { padding-top: 32px; padding-bottom: 48px; }
+    .page-roster .model-section > .container { padding: 0 20px; }
+    .page-roster .model-section h1 { font-size: 38px; padding-bottom: 20px; margin-bottom: 28px; }
+    .page-roster .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 20px; }
+    .page-roster .model-card:nth-child(even) { margin-top: 24px; }
+    .page-roster .model-card-name { font-size: 24px; }
+    .page-roster .model-card-image { margin-bottom: 12px; }
+    .roster-men .model-grid { grid-template-columns: minmax(0, 280px); padding: 0 16px; }
+    .page-roster .footer-credit { display: block; margin-top: 4px; }
+}

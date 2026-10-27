@@ -55,7 +55,7 @@
     --hero-background-color: #f0f0f0; /* Light Gray for Hero */
     --text-color: #000; /* Black */
     --accent-color: #eee; /* Very Light Gray */
-    --header-h: 60px; /* Reduced from 83px for a thinner header */
+    --header-h: 72px;
     --individual-image-width: 280px; /* Target width for each image in polaroid/editorial groups */
 }
 
@@ -94,9 +94,7 @@ main {
 }
 
 /* Remove top padding from main on the homepage, as hero handles its own spacing */
-body.page-home main,
-body.page-about main,
-body.page-application main {
+body.page-home main {
     padding-top: 0;
 }
 
@@ -140,9 +138,31 @@ a:focus-visible {
     color: var(--secondary-color); /* Match hover state for consistency */
 }
 
+button:focus-visible,
+nav ul li a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+}
+
+.skip-link:focus {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    overflow: visible;
+    padding: 10px 16px;
+    background: #fff;
+    color: #000;
+    z-index: 3000;
+}
+
 /* Header */
 header {
-    padding: 7px 0px; /* Reduced vertical padding for a thinner header */
+    padding: 0;
+    height: var(--header-h);
     width: 100%;
     position: fixed;
     top: 0;
@@ -152,13 +172,18 @@ header {
 
 .logo {
     font-family: 'Roboto', sans-serif; 
-    font-size: 2.5rem; /* Reduced from 2.5rem to fit the new thinner header */
+    font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+    white-space: nowrap;
+    line-height: 1.1;
     font-weight: 100; /* Thin weight */
     text-transform: uppercase;
     margin: 0; /* Grid placement: Left column */
     grid-column: 1 / 2;
     justify-self: start;
 }
+
+.logo img { display: block; width: 230px; max-width: 100%; height: auto; }
+@media (max-width: 480px) { .logo img { width: 208px; } }
 
 nav {
     display: block; /* Ensure nav takes up space */
@@ -193,7 +218,7 @@ nav ul li a:hover {
 
 /* Custom focus style for navigation links to replace the default outline */
 nav ul li a:focus-visible {
-    outline: none; /* Remove the default outline */
+    outline: 2px solid currentColor;
     color: var(--secondary-color); /* Use the hover color for a subtle focus state */
 }
 
@@ -330,9 +355,12 @@ nav ul li a:active {
     pointer-events: none; /* Ensures the link underneath is still clickable */
 }
 
-.model-card:hover .model-card-stats,
-.model-card.touch-active .model-card-stats {
+.model-card:focus-visible .model-card-stats {
     opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .model-card:hover .model-card-stats { opacity: 1; }
 }
 
 .model-card-stats span {
@@ -395,19 +423,19 @@ footer p {
 }
 
 .header-flex {
-    display: grid; /* Symmetrical two-column grid for logo and nav */
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    gap: 24px;
     align-items: center;
     /* Ensure the container has a defined height to contain its children */
     height: var(--header-h);
 }
 
+.header-flex .logo { margin-right: auto; }
+
 .header-socials {
-    position: absolute;
-    left: 50px; /* Fixed distance from the left edge of the viewport */
-    top: 50%;
-    transform: translateY(calc(-50% + 3px));
     display: flex;
+    flex: 0 0 18px;
+    align-items: center;
 }
 
 .social-icon {
@@ -424,10 +452,11 @@ footer p {
 .hamburger {
     display: none; /* Hidden by default, shown on mobile */
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     gap: 5px;
-    width: 28px; /* Slightly larger for easier tapping */
-    height: 21px;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
     background: none;
     border: none;
     cursor: pointer;
@@ -455,7 +484,7 @@ footer p {
 }
 
 .hamburger .bar {
-    width: 100%;
+    width: 28px;
     height: 3px;
     background-color: var(--text-color);
     border-radius: 2px;
@@ -482,7 +511,8 @@ footer p {
 @media (max-width: 1024px) {
     .header-flex {
         /* On tablet, switch to a simpler 2-column flex layout */
-        height: auto;
+        height: var(--header-h);
+        gap: 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -493,7 +523,8 @@ footer p {
     }
 
     .logo {
-        font-size: 2rem; /* Slightly smaller logo on tablet */
+        font-size: clamp(1rem, 3.8vw, 2rem);
+        letter-spacing: 0.5px;
         margin-left: 0; /* Remove margin on tablet */
     }
 
@@ -529,6 +560,7 @@ footer p {
 
     nav {
         position: fixed;
+        visibility: hidden;
         top: 0;
         right: 0;
         width: 100%;
@@ -543,6 +575,7 @@ footer p {
     }
 
     nav.active {
+        visibility: visible;
         transform: translateX(0); /* Slide in */
     }
 
@@ -654,7 +687,8 @@ footer p {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
-.modal-download-link {
+.modal-download-link,
+.modal-fullsize-link {
     display: none;
     position: absolute;
     top: 20px;
@@ -672,7 +706,10 @@ footer p {
     transition: color 0.25s, opacity 0.25s;
 }
 
-.modal-download-link svg {
+.modal-fullsize-link { right: 130px; }
+
+.modal-download-link svg,
+.modal-fullsize-link svg {
     width: 27px;
     height: 27px;
     fill: none;
@@ -683,7 +720,9 @@ footer p {
 }
 
 .modal-download-link:hover,
-.modal-download-link:focus {
+.modal-download-link:focus,
+.modal-fullsize-link:hover,
+.modal-fullsize-link:focus {
     color: #bbb;
 }
 
@@ -732,4 +771,31 @@ footer p {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Shared editorial header */
+header .container { max-width: none; padding-left: 36px; padding-right: 36px; }
+.header-flex { gap: 24px; }
+.logo img { width: 210px; }
+nav ul { gap: 28px; }
+nav ul li a { font-size: 11px; font-weight: 400; letter-spacing: 1.1px; }
+.header-socials a { display: flex; align-items: center; }
+.hamburger { gap: 7px; }
+.hamburger .bar { height: 1px; border-radius: 0; }
+@media (max-width: 1024px) {
+    nav ul { gap: 40px; }
+    nav ul li a { font-size: 2rem; font-weight: 100; }
+}
+@media (max-width: 640px) {
+    header .container { padding-left: 20px; padding-right: 20px; }
+    .logo img { width: 190px; }
+}
+
+/* Center the wordmark independently of the navigation on other pages. */
+body:not(.page-home) .header-flex { position: relative; }
+body:not(.page-home) .header-flex .logo { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; }
+body:not(.page-home) .header-flex nav { margin-left: auto; }
+@media (max-width: 1024px) {
+    body:not(.page-home) .header-socials { display: flex; }
+    body:not(.page-home) .hamburger { margin-left: auto; }
 }

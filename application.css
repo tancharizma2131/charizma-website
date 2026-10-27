@@ -44,11 +44,11 @@
 /* --- Responsive Adjustments --- */
 @media (max-width: 600px) {
     .application-showcase {
-        padding: 140px 20px 60px; /* Further increased space to ensure content is clear of the header */
+        padding: 60px 20px;
     }
 
     .application-content h1 {
-        font-size: 2.8rem;
+        font-size: clamp(1.8rem, 8vw, 2.8rem);
         letter-spacing: 1px;
     }
 
