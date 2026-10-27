@@ -1,63 +1,56 @@
-/* === Application Page - Stylish & Minimal Layout === */
+/* Application page in the shared editorial style. */
+.page-application,
+.page-application header { background: #faf9f6; }
 
 .application-showcase {
-    max-width: 850px; /* Constrain width for a focused, minimal feel */
-    margin: 0 auto; /* Center the container */
-    padding: 100px 40px; /* Generous vertical padding for whitespace */
-    text-align: center; /* Center all content within */
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 52px 40px 80px;
+    text-align: center;
 }
 
-/* --- Typography & Form Styles --- */
-
 .application-content h1 {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 100;
-    font-size: 4rem;
-    margin: 0 0 2rem 0;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    line-height: 1.1;
+    font: italic 64px/1.1 Georgia, serif;
+    margin: 0 0 28px;
+    text-transform: none;
+    letter-spacing: -1px;
 }
 
 .application-intro {
-    font-family: 'Roboto', sans-serif;
     font-weight: 300;
     font-size: 1.1rem;
     color: #444;
     line-height: 1.8;
-    max-width: 650px; /* Constrain line length for readability */
-    margin: 0 auto 4rem auto; /* Center the paragraph and add space below */
+    max-width: 650px;
+    margin: 0 auto 32px;
 }
 
 .application-form-wrapper {
     width: 100%;
-    border-top: 1px solid #eee; /* Subtle separator */
-    padding-top: 4rem; /* Space between separator and form */
+    border-top: 1px solid #d9d7d2;
+    padding-top: 24px;
 }
 
 .application-form-wrapper iframe {
+    display: block;
     width: 100%;
     border: none;
     min-height: 2000px;
 }
 
-/* --- Responsive Adjustments --- */
+.application-direct-link {
+    margin: 0 auto 24px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.application-direct-link a { color: #000; text-underline-offset: 0.2em; }
+.page-application footer { background: #faf9f6; color: #666; border-top: 1px solid #d9d7d2; }
+
 @media (max-width: 600px) {
-    .application-showcase {
-        padding: 60px 20px;
-    }
-
-    .application-content h1 {
-        font-size: clamp(1.8rem, 8vw, 2.8rem);
-        letter-spacing: 1px;
-    }
-
-    .application-intro {
-        font-size: 1rem;
-        margin-bottom: 3rem;
-    }
-
-    .application-form-wrapper {
-        padding-top: 3rem;
-    }
+    .application-showcase { padding: 32px 20px 48px; }
+    .application-content h1 { font-size: clamp(34px, 10vw, 42px); margin-bottom: 24px; }
+    .application-intro { font-size: 1rem; line-height: 1.7; margin-bottom: 24px; }
+    .application-direct-link { font-size: 0.85rem; }
 }

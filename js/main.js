@@ -41,11 +41,11 @@ const modalHTML = `
     </div>
     <img class="modal-content" id="modalImage" alt="Enlarged view" style="display: none;">
   </div>
-  <a class="modal-fullsize-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open full-resolution comp card in a new tab" title="View full resolution">
+  <button type="button" class="modal-fullsize-link" aria-label="Expand comp card" aria-pressed="false" title="Expand comp card">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 3l6 6m12-6-6 6M3 21l6-6m12 6-6-6" />
     </svg>
-  </a>
+  </button>
   <a class="modal-download-link" href="#" download aria-label="Download comp card as PNG" title="Download PNG">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14" />
@@ -223,6 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextBtn = modal.querySelector(".next-btn");
         const downloadLink = modal.querySelector(".modal-download-link");
         const fullsizeLink = modal.querySelector('.modal-fullsize-link');
+        const contentWrapper = modal.querySelector('.modal-content-wrapper');
+        const expandIconPath = fullsizeLink.querySelector('path').getAttribute('d');
 
         let imagesToPopup = []; // This will be populated by initializeModelLightbox
         let currentImageIndex = 0;
@@ -230,6 +232,26 @@ document.addEventListener('DOMContentLoaded', () => {
         let modalMode = 'gallery';
         let backgroundState = [];
         let previousOverflow;
+
+        function setCompCardExpanded(expanded) {
+            modal.classList.toggle('comp-card-expanded', expanded);
+            fullsizeLink.setAttribute('aria-pressed', String(expanded));
+            const label = expanded ? 'Fit comp card to screen' : 'Expand comp card';
+            fullsizeLink.setAttribute('aria-label', label);
+            fullsizeLink.title = label;
+            fullsizeLink.querySelector('path').setAttribute('d', expanded
+                ? 'M3 8h5V3m13 5h-5V3M8 21v-5H3m13 5v-5h5M3 3l5 5m13-5-5 5M3 21l5-5m13 5-5-5'
+                : expandIconPath);
+            contentWrapper.tabIndex = expanded ? 0 : -1;
+            contentWrapper.scrollTop = 0;
+            contentWrapper.scrollLeft = 0;
+        }
+
+        fullsizeLink.addEventListener('click', () => {
+            if (modalMode === 'comp-card') {
+                setCompCardExpanded(!modal.classList.contains('comp-card-expanded'));
+            }
+        });
 
         function openModal(trigger, label) {
             lastFocusedElement = trigger;
@@ -249,6 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (index < 0) index = imagesToPopup.length - 1; // Loop to end
             
             const img = imagesToPopup[index];
+            setCompCardExpanded(false);
             modalMode = 'gallery';
             modal.classList.remove('comp-card-modal');
             downloadLink.style.display = 'none';
@@ -293,14 +316,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             lastFocusedElement = link;
             modalMode = 'comp-card';
+            setCompCardExpanded(false);
             modal.classList.add('comp-card-modal');
             prevBtn.style.display = 'none';
             nextBtn.style.display = 'none';
             downloadLink.style.display = 'inline-flex';
             downloadLink.href = compCardSrc;
             fullsizeLink.style.display = 'inline-flex';
-            fullsizeLink.href = compCardSrc;
-            fullsizeLink.setAttribute('aria-label', `Open ${modelName} comp card at full resolution in a new tab`);
             downloadLink.setAttribute('download', `${modelName}_CompCard.png`);
             downloadLink.setAttribute('aria-label', `Download ${modelName} comp card as PNG`);
             modalImg.alt = `${modelName} comp card`;
@@ -310,6 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modalImg.style.display = 'none';
             modalImg.onload = function() {
                 loadingIndicator.style.display = 'none';
+                modal.style.setProperty('--comp-card-width', `${modalImg.naturalWidth}px`);
                 modalImg.style.display = 'block';
             };
             modalImg.onerror = function() {
@@ -321,6 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function closeModal() {
+            setCompCardExpanded(false);
             modal.style.display = "none";
             backgroundState.forEach(({ element, inert }) => { element.inert = inert; });
             document.body.style.overflow = previousOverflow;
@@ -357,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const controls = [closeModalBtn, prevBtn, nextBtn, fullsizeLink, downloadLink]
                 .filter(element => element.style.display !== 'none');
+            if (modal.classList.contains('comp-card-expanded')) controls.push(contentWrapper);
             trapFocus(e, controls);
         });
 
