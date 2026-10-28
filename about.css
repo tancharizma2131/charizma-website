@@ -54,7 +54,6 @@
 .contact-details a,
 .contact-details .contact-value { overflow-wrap: anywhere; color: #555; font-weight: 300; }
 .contact-details a:hover { color: #000; text-decoration: underline; text-underline-offset: 3px; }
-.page-about footer { background: #faf9f6; color: #666; border-top: 1px solid #d9d7d2; }
 
 @media (max-width: 899px) {
     .about-showcase { grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 32px 20px 48px; }
@@ -67,3 +66,24 @@
 @media (max-width: 500px) {
     .contact-details li { flex-direction: column; gap: 4px; }
 }
+
+/* Founder portraits keep the same restrained editorial rhythm as the story. */
+.about-founders { margin-top: 40px; padding-top: 32px; border-top: 1px solid #d9d7d2; }
+.about-founders h2 { font-size: clamp(26px, 2.5vw, 32px); margin-bottom: 24px; }
+.founders-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; width: calc(75% + 25px); }
+.founder { margin: 0; min-width: 0; }
+.founder img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top; }
+.founder figcaption { padding-top: 16px; }
+.founder h3 { font: italic clamp(20px, 2vw, 26px)/1.2 Georgia, serif; letter-spacing: -0.3px; text-transform: none; margin: 0 0 6px; }
+.founder p { font-size: 11px; letter-spacing: 1px; color: #666; margin: 0; }
+@media (max-width: 500px) {
+    .founders-grid { gap: 24px; }
+    .founder h3 { font-size: 20px; }
+    .founder figcaption { padding-top: 12px; }
+}
+
+@media (max-width: 500px) {
+    .founders-grid { width: 100%; }
+}
+
+.founder .founder-credits { margin-top: 12px; font-size: 12px; line-height: 1.7; letter-spacing: 0; color: #555; font-weight: 300; }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Application Preview | Charizma Management</title>
+    <link rel="icon" type="image/png" href="image/brand/cm.png">
+    <link rel="stylesheet" href="style.min.css?v=20261028-entry1">
+    <link rel="stylesheet" href="application-preview.css?v=20261028-footer1">
+    <script src="js/main.min.js?v=20261028-footer1" defer></script>
+    <script src="js/application-preview.js?v=20261028-2" defer></script>
+    <script src="js/footer.js?v=20261028-footer1" defer></script>
+</head>
+<body class="application-preview">
+    <a href="#main-content" class="skip-link visually-hidden">Skip to main content</a>
+    <header></header>
+    <main id="main-content">
+        <div class="apply-shell">
+            <div class="apply-intro">
+                <p class="apply-eyebrow">Your next chapter</p>
+                <h1>Be Charizmatic</h1>
+                <p>Distinctive faces. Individual stories.<br>We’d love to discover yours.</p>
+            </div>
+            <div class="preview-note">
+                <span>Design preview · Nothing is sent or saved</span>
+                <button type="button" id="example-details" disabled>Try example details <span aria-hidden="true">↗</span></button>
+            </div>
+            <div id="application-flow">
+                <ol class="apply-steps" aria-label="Application progress">
+                    <li aria-current="step"><span>01</span> About you</li>
+                    <li><span>02</span> Your digitals</li>
+                </ol>
+                <noscript><p>Please enable JavaScript to try this preview, or use the current application form linked below.</p></noscript>
+                <form id="application-preview-form" novalidate>
+                    <fieldset class="apply-step" data-step="0">
+                        <legend class="visually-hidden">About you</legend>
+                        <div class="step-heading"><h2 tabindex="-1">Let’s start with you.</h2><p>Your contact details and current measurements.</p></div>
+                        <p class="required-note">All fields are required unless marked optional.</p>
+                        <div class="apply-grid">
+                            <div class="apply-field"><label for="full-name">Name</label><input id="full-name" name="fullName" autocomplete="name" required maxlength="200"></div>
+                            <div class="apply-field"><label for="birth-date">Date of birth</label><input id="birth-date" name="birthDate" type="date" autocomplete="bday" required></div>
+                            <div class="apply-field"><label for="location">City and country</label><input id="location" name="location" placeholder="e.g. Bangkok, Thailand" required maxlength="200"></div>
+                            <div class="apply-field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
+                        </div>
+                        <h3 class="form-group-title">Measurements <span>in centimetres</span></h3>
+                        <div class="apply-grid measurements-grid">
+                            <div class="apply-field"><label for="height">Height</label><input id="height" name="height" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="bust">Bust / chest</label><input id="bust" name="bust" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="waist">Waist</label><input id="waist" name="waist" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="hips">Hips</label><input id="hips" name="hips" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
+                        </div>
+                        <div class="apply-grid additional-details">
+                            <div class="apply-field"><label for="tattoos">Tattoos</label><select id="tattoos" name="tattoos" required><option value="">Choose an answer</option><option>No</option><option>Yes</option></select></div>
+                            <div class="apply-field"><label for="piercings">Piercings</label><select id="piercings" name="piercings" required><option value="">Choose an answer</option><option>No</option><option>Yes</option></select></div>
+                            <div class="apply-field"><label for="instagram">Instagram</label><input id="instagram" name="instagram" placeholder="@yourname or profile link" required maxlength="200" autocapitalize="none" spellcheck="false"></div>
+                            <div class="apply-field"><label for="source">How did you hear about Charizma?</label><input id="source" name="source" required maxlength="500"></div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="apply-step" data-step="1" hidden disabled>
+                        <legend class="visually-hidden">Your digitals</legend>
+                        <div class="step-heading"><h2 tabindex="-1">Simply, you.</h2><p>Use Ksenia’s digitals below as framing examples, then add your own four recent photos. Professional photography isn’t necessary.</p></div>
+                        <div class="photo-guidance"><span>Natural daylight</span><span>No makeup or filters</span><span>Simple, fitted clothing</span></div>
+                        <p class="photo-formats">JPG, PNG or WebP · Up to 10 MB per photo. Photos stay on your device in this preview.</p>
+                        <div class="photo-grid" id="digital-uploads"></div>
+                        <p id="photo-error" class="field-error" role="alert" hidden></p>
+                        <div class="apply-grid photo-details">
+                            <div class="apply-field full-width"><label for="portfolio">Portfolio link <span>optional</span></label><input id="portfolio" name="portfolio" type="url" placeholder="https://" maxlength="1000"></div>
+                        </div>
+                        <p class="application-review-note">You can go back to review your answers before finishing.</p>
+                    </fieldset>
+                    <div class="apply-navigation">
+                        <button type="button" id="previous-step" class="apply-back" hidden><span aria-hidden="true">←</span> Back</button>
+                        <p id="step-count" aria-live="polite">Step 1 of 2</p>
+                        <button type="submit" id="next-step" class="apply-next" disabled>Continue <span aria-hidden="true">→</span></button>
+                    </div>
+                    <p class="apply-help">Need a hand? <a href="mailto:info@charizma-mgmt.com">info@charizma-mgmt.com</a></p>
+                </form>
+            </div>
+            <section id="preview-confirmation" class="preview-confirmation" hidden aria-labelledby="confirmation-title">
+                <p class="apply-eyebrow">Preview complete</p>
+                <h2 id="confirmation-title" tabindex="-1">A new chapter begins.</h2>
+                <p>This is how the application confirmation could look.<br>Your example application has not been sent or saved.</p>
+                <div class="confirmation-summary"><p id="confirmation-name"></p><p>Four digitals selected · Portfolio optional</p></div>
+                <button type="button" class="apply-next" id="review-preview">Review your example <span aria-hidden="true">←</span></button>
+            </section>
+            <p id="preview-feedback" class="visually-hidden" role="status"></p>
+            <p class="existing-application">Looking to apply today? <a href="be-charizmatic.html">Use the current application form ↗</a></p>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+</html>

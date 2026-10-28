@@ -46,7 +46,6 @@
 }
 
 .application-direct-link a { color: #000; text-underline-offset: 0.2em; }
-.page-application footer { background: #faf9f6; color: #666; border-top: 1px solid #d9d7d2; }
 
 @media (max-width: 600px) {
     .application-showcase { padding: 32px 20px 48px; }

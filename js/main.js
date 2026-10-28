@@ -24,12 +24,6 @@ const headerHTML = `
 </div>
 `;
 
-const footerHTML = `
-<div class="container">
-    <p>&copy; <span id="footer-year"></span> Charizma Management <span class="footer-credit">&middot; Crafted by The Folio Lab</span></p>
-</div>
-`;
-
 const modalHTML = `
 <div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-label="Image gallery" tabindex="-1">
   <button type="button" class="close-modal-btn" aria-label="Close image gallery">&times;</button>
@@ -56,15 +50,10 @@ const modalHTML = `
 
 document.addEventListener('DOMContentLoaded', () => {
     const headerEl = document.querySelector('header');
-    const footerEl = document.querySelector('footer');
     const bodyEndEl = document.querySelector('#body-end-scripts');
 
     if (headerEl) headerEl.innerHTML = headerHTML;
-    if (footerEl) footerEl.innerHTML = footerHTML;
     if (bodyEndEl) bodyEndEl.innerHTML = modalHTML;
-
-    const footerYear = document.querySelector('#footer-year');
-    if (footerYear) footerYear.textContent = new Date().getFullYear();
 
     // All components are loaded, now run the scripts
     initializePageScripts();
@@ -77,10 +66,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const status = carousel.querySelector('.carousel-status');
             let current = 0;
             let lastSwipe = 0;
+            let displayed = 0;
+            let selectionToken = 0;
+            let activeFade;
+            const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('is-active', i === current);
+                slide.inert = i !== current;
+                slide.setAttribute('aria-hidden', String(i !== current));
+            });
             const framedImages = Array.from(carousel.querySelectorAll('img[data-head-top]'));
             function frameImages() {
                 framedImages.forEach(img => {
-                    const box = img.parentElement.getBoundingClientRect();
+                    // Layout dimensions stay stable while the image wrapper gently scales.
+                    const box = { width: img.parentElement.clientWidth, height: img.parentElement.clientHeight };
                     if (!box.width || !box.height || !img.naturalWidth) return;
                     const headTop = Number(img.dataset.headTop);
                     const coverScale = Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight);
@@ -102,16 +101,58 @@ document.addEventListener('DOMContentLoaded', () => {
             const frameObserver = new ResizeObserver(frameImages);
             framedImages.forEach(img => frameObserver.observe(img.parentElement));
             frameImages();
-            function selectSlide(index) {
-                const photoFocused = document.activeElement?.classList.contains('hero-photo');
+            function finishFade() {
+                if (activeFade) {
+                    activeFade.onfinish = null;
+                    activeFade.cancel();
+                    activeFade = null;
+                }
+                slides.forEach((slide, i) => {
+                    slide.hidden = i !== displayed;
+                    slide.classList.remove('is-leaving');
+                });
+            }
+            reducedMotion.addEventListener('change', event => {
+                if (event.matches) finishFade();
+            });
+            async function selectSlide(index) {
                 current = (index + slides.length) % slides.length;
-                slides.forEach((slide, i) => { slide.hidden = i !== current; });
+                const token = ++selectionToken;
+                const target = current;
+                if (target === displayed) return;
+                const incoming = slides[target];
+                // Decode the next spread first, keeping the current photos visible while it loads.
+                await Promise.all(Array.from(incoming.querySelectorAll('img')).map(img => {
+                    img.loading = 'eager';
+                    return img.decode().catch(() => {});
+                }));
+                if (token !== selectionToken) return;
+                const photoFocused = document.activeElement?.classList.contains('hero-photo');
+                const outgoing = displayed;
+                finishFade();
+                displayed = target;
+                slides.forEach((slide, i) => {
+                    slide.hidden = i !== displayed && i !== outgoing;
+                    slide.inert = i !== displayed;
+                    slide.setAttribute('aria-hidden', String(i !== displayed));
+                    slide.classList.toggle('is-leaving', i === outgoing && i !== displayed);
+                    slide.classList.toggle('is-active', i === displayed);
+                });
                 frameImages();
-                counter.textContent = String(current + 1).padStart(2, '0');
-                status.textContent = `${slides[current].dataset.name}, slide ${current + 1} of ${slides.length}`;
-                carousel.querySelector('.featured-name').textContent = slides[current].dataset.name;
+                counter.textContent = String(displayed + 1).padStart(2, '0');
+                status.textContent = `${incoming.dataset.name}, slide ${displayed + 1} of ${slides.length}`;
+                carousel.querySelector('.featured-name').textContent = incoming.dataset.name;
+                if (reducedMotion.matches) {
+                    finishFade();
+                } else {
+                    activeFade = incoming.animate([{ opacity: 0 }, { opacity: 1 }], {
+                        duration: 650,
+                        easing: 'ease-in-out'
+                    });
+                    activeFade.onfinish = finishFade;
+                }
                 if (photoFocused) {
-                    const photos = slides[current].querySelectorAll('.hero-photo');
+                    const photos = incoming.querySelectorAll('.hero-photo');
                     const visiblePhoto = Array.from(photos).find(photo => photo.getClientRects().length);
                     visiblePhoto?.focus({ preventScroll: true });
                 }

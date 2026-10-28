@@ -315,11 +315,6 @@
     letter-spacing: 0;
     border-color: #dedcd6;
 }
-.page-model-editorial footer {
-    background: #faf9f6;
-    color: #666;
-    border-top: 1px solid #d9d7d2;
-}
 
 @media (max-width: 899px) {
     .page-model-editorial .model-showcase { padding-top: 24px; }

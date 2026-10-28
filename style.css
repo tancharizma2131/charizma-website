@@ -93,6 +93,14 @@ main {
     padding-top: var(--header-h); /* Content starts directly below the fixed header */
 }
 
+@keyframes page-content-reveal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    main { animation: page-content-reveal 240ms ease-out; }
+}
+
 /* Remove top padding from main on the homepage, as hero handles its own spacing */
 body.page-home main {
     padding-top: 0;
@@ -403,23 +411,32 @@ nav ul li a:active {
     height: 18px;
 }
 
-/* Footer */
-
-footer {
-    font-family: 'Roboto', sans-serif; /* Use standard Roboto font */
-    font-weight: 300; /* Light weight for footer text */
-    background-color: var(--primary-color);
-    color: var(--background-color); /* Assuming white text on primary background */
-    text-align: center;
-    padding: 10px 0; /* Increased padding for better spacing */
+/* Shared site footer */
+.site-footer {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    background: #faf9f6;
+    color: #666;
+    border-top: 1px solid #d9d7d2;
+    text-align: left;
+    padding: 22px 0;
+    font-size: 10px;
+    line-height: 1.7;
+    letter-spacing: 0.3px;
 }
-
-footer p {
-    margin: 0;
+.site-footer .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px 24px;
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 36px;
 }
-
-.footer-credit {
-    opacity: 0.75;
+.site-footer p { margin: 0; }
+@media (max-width: 600px) {
+    .site-footer .footer-inner { flex-direction: column; gap: 4px; padding: 0 20px; }
 }
 
 .header-flex {

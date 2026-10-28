@@ -9,12 +9,25 @@
 .page-roster .model-card-image { aspect-ratio: 3 / 4; margin-bottom: 15px; }
 .page-roster .model-card:hover .model-card-image { opacity: 1; }
 .page-roster .model-card-image img { object-position: center 30%; }
+@media (prefers-reduced-motion: no-preference) {
+    .page-roster .model-card-image img {
+        transform-origin: 50% 0%;
+        transition: transform 550ms cubic-bezier(.2,.65,.3,1);
+    }
+    .page-roster .model-card:focus-visible .model-card-image img { transform: scale(1.02); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .page-roster .model-card:hover .model-card-image img { transform: scale(1.02); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .page-roster .model-card-image,
+    .page-roster .model-card-stats { transition: none; }
+}
 .page-roster .model-card-name { font: italic 26px/1.2 Georgia, serif; text-transform: none; letter-spacing: 0; }
 .page-roster .model-card-stats { background: #faf9f6e8; }
-.page-roster .model-card-stats span { font-size: 10px; letter-spacing: 1px; }
+.page-roster .model-card-stats span { font-size: 13px; letter-spacing: 1px; }
 .roster-men .model-grid { grid-template-columns: minmax(0, 300px); justify-content: center; }
 .roster-men .model-card-image { aspect-ratio: 3 / 4; }
-.page-roster footer { background: #faf9f6; color: #666; text-align: left; border-top: 1px solid #d9d7d2; padding: 22px 0; font-size: 10px; }
 @media (max-width: 1024px) {
     .page-roster .model-section > .container { padding: 0 36px; }
     .page-roster .model-grid { gap: 24px; }
@@ -28,5 +41,4 @@
     .page-roster .model-card-name { font-size: 24px; }
     .page-roster .model-card-image { margin-bottom: 12px; }
     .roster-men .model-grid { grid-template-columns: minmax(0, 280px); padding: 0 16px; }
-    .page-roster .footer-credit { display: block; margin-top: 4px; }
 }
