@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="same-origin">
+<title>Staff sign-in | Charizma Management</title>
+<link rel="icon" type="image/png" href="image/brand/cm.png">
+<link rel="stylesheet" href="style.min.css?v=20261028-entry1"><link rel="stylesheet" href="staff.css?v=20261028-1">
+<script src="js/staff.js?v=20261028-fresh1" defer></script><script src="js/footer.js?v=20261028-footer1" defer></script>
+</head><body class="page-staff">
+<a href="#main-content" class="skip-link visually-hidden">Skip to main content</a>
+<div class="staff-header"><a href="index.html" aria-label="Charizma Management home"><img src="image/brand/charizma-clean.svg" alt="Charizma Management" width="1255" height="247"></a></div>
+<main id="main-content" class="staff-shell">
+<section id="sign-in-panel" aria-labelledby="staff-title">
+<p class="staff-kicker">Private access</p><h1 id="staff-title">The applicant book</h1>
+<p class="staff-intro">Sign in with your staff email to continue.</p>
+<noscript><p>Enable JavaScript to use staff sign-in.</p></noscript>
+<form id="staff-email-form"><label for="staff-email">Staff email</label><input id="staff-email" name="email" type="email" autocomplete="username" required value="info@charizma-mgmt.com" maxlength="254"><button type="submit">Send sign-in code <span aria-hidden="true">→</span></button></form>
+<form id="staff-code-form" hidden><label for="staff-code">Email code</label><input id="staff-code" name="token" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" minlength="6" maxlength="10" required><p class="staff-hint">Enter the code sent to <span id="sent-to"></span>.</p><button type="submit">Sign in <span aria-hidden="true">→</span></button><button type="button" class="text-button" id="send-again">Send another code</button></form>
+</section>
+<section id="signed-in-panel" hidden aria-labelledby="signed-in-title"><p class="staff-kicker">Private access</p><h1 id="signed-in-title" tabindex="-1">You’re signed in.</h1><p class="staff-intro">Signed in as <span id="staff-identity"></span>.</p><p class="staff-intro">Open your private applicant book below.</p><a class="staff-preview-link" href="applicants.html">Open the applicant book <span aria-hidden="true">↗</span></a><button id="sign-out" class="text-button" type="button">Sign out</button></section>
+<p id="staff-message" role="status" aria-live="polite"></p>
+</main><footer></footer></body></html>

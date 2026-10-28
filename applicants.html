@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <title>Applicant Book | Charizma Management</title>
+    <link rel="icon" type="image/png" href="image/brand/cm.png">
+    <link rel="stylesheet" href="style.min.css?v=20261028-entry1">
+    <link rel="stylesheet" href="applicants-preview.css?v=20261028-footer1">
+    <link rel="stylesheet" href="applicants.css?v=20261028-connected1">
+    <script src="js/applicants.js?v=20261028-fresh1" defer></script>
+    <script src="js/footer.js?v=20261028-footer1" defer></script>
+</head>
+<body class="applicant-desk">
+    <a href="#main-content" class="skip-link visually-hidden">Skip to main content</a>
+    <div class="desk-header" role="banner">
+        <span class="desk-label">Applicant book</span>
+        <a href="index.html" class="desk-logo" aria-label="Charizma Management home"><img src="image/brand/charizma-clean.svg" alt="Charizma Management" width="1255" height="247"></a>
+        <button type="button" id="desk-sign-out" class="desk-form-link">Sign out</button>
+    </div>
+    <main id="main-content" class="desk-main">
+        <div class="desk-title"><h1>Applications</h1><p>A place to discover your next distinctive face.</p></div>
+        <p id="desk-connection" class="desk-connection" role="status">Checking your staff session…</p>
+        <noscript><p>Please enable JavaScript to use the private dashboard.</p></noscript>
+        <div id="desk-content" hidden>
+        <div class="desk-toolbar">
+            <div class="desk-search"><label for="applicant-search">Search applicants</label><input id="applicant-search" type="search" placeholder="Name, city or email" autocomplete="off"></div>
+            <div><label for="source-filter">Application source</label><select id="source-filter"><option value="all">All sources</option><option value="Website">Website</option><option value="Google Form">Google Form history</option></select></div>
+            <div><label for="applicant-sort">Sort by</label><select id="applicant-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></div>
+        </div>
+        <div id="status-filters" class="status-filters" role="group" aria-label="Filter applications by status"></div>
+        <div class="desk-workspace" id="desk-workspace">
+            <section class="applicant-index" aria-labelledby="index-heading">
+                <div class="index-heading"><h2 id="index-heading">Applicant list</h2><span id="result-count" role="status"></span></div>
+                <div id="applicant-list"></div>
+                <button id="load-more" class="desk-text-button" type="button" hidden>Load more applications</button>
+                <div id="empty-results" class="empty-results" hidden><h3>No applications yet.</h3><p>New applications and imported responses will appear here.</p><button id="clear-filters" type="button">Clear filters</button></div>
+            </section>
+            <section class="applicant-review" id="applicant-review" aria-label="Applicant details" hidden></section>
+        </div>
+        </div>
+        <div class="desk-actions"><button id="refresh-records" class="desk-text-button" type="button" hidden>Refresh applications</button><button id="retry-alerts" class="desk-text-button" type="button" hidden>Retry email alerts</button><p id="desk-error" role="alert"></p></div>
+        <p id="desk-status" class="visually-hidden" role="status"></p>
+    </main>
+    <footer></footer>
+    <dialog id="photo-viewer" aria-labelledby="viewer-title">
+        <div class="viewer-toolbar"><p id="viewer-title"></p><button type="button" id="close-viewer" aria-label="Close photo viewer">×</button></div>
+        <div class="viewer-body"><button type="button" id="previous-photo" aria-label="Previous digital">←</button><img id="viewer-image" alt=""><button type="button" id="next-photo" aria-label="Next digital">→</button></div>
+        <p class="viewer-credit">Private digitals · Charizma Management</p>
+    </dialog>
+</body>
+</html>

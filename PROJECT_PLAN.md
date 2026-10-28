@@ -10,3 +10,7 @@ Agreed with the user on 28 October 2026:
 6. Fix the review findings, then publish with the user’s approval.
 
 The form and dashboard are currently interactive previews with sample data. No application backend, staff authentication, email delivery, or historical-data import has been connected.
+
+
+## Main application page — 28 October 2026
+The approved connected form now lives at `be-charizmatic.html`, replacing the Google Form embed locally. Existing navigation uses this route. `apply.html` redirects to it. Production publication and historical response import remain pending.

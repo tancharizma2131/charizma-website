@@ -1,0 +1,20 @@
+.page-staff { background: #faf9f6; color: #222; min-height: 100svh; display: flex; flex-direction: column; }
+.page-staff [hidden] { display: none !important; }
+.staff-header { padding: 32px 24px; border-bottom: 1px solid #dedcd6; }
+.staff-header a { display: block; width: 210px; margin: auto; }
+.staff-header img { display: block; width: 100%; height: auto; }
+.staff-shell { box-sizing: border-box; width: 100%; max-width: 520px; margin: auto; padding: 64px 28px 80px; }
+.staff-kicker { font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px; color: #777; margin: 0 0 20px; }
+.staff-shell h1 { font: italic clamp(38px, 6vw, 48px)/1.12 Georgia, serif; text-transform: none; letter-spacing: -1px; margin: 0 0 22px; }
+.staff-intro { font-size: 14px; line-height: 1.8; color: #555; margin: 0 0 28px; overflow-wrap: anywhere; }
+.staff-shell label { display: block; font-size: 11px; color: #555; margin-bottom: 8px; }
+.staff-shell input { box-sizing: border-box; width: 100%; font: 16px 'Roboto', sans-serif; color: #222; background: transparent; border: 0; border-bottom: 1px solid #aaa79e; border-radius: 0; padding: 12px 0; margin-bottom: 22px; }
+.staff-shell button { display: flex; justify-content: space-between; align-items: center; gap: 24px; width: 100%; min-height: 48px; padding: 12px 18px; background: #222; color: white; border: 1px solid #222; font: 12px 'Roboto', sans-serif; cursor: pointer; }
+.staff-shell button:disabled { cursor: wait; opacity: .6; }
+.staff-shell .text-button { justify-content: flex-start; border: 0; background: transparent; color: #555; padding: 12px 0; margin-top: 10px; width: auto; text-decoration: underline; text-underline-offset: 4px; }
+.staff-hint, #staff-message { font-size: 12px; line-height: 1.8; color: #666; overflow-wrap: anywhere; }
+#staff-message:empty { display: none; }
+#staff-message { margin: 22px 0 0; }
+.staff-preview-link { display: inline-block; font-size: 13px; color: #222; text-underline-offset: 4px; }
+.staff-shell :focus-visible { outline: 2px solid #555; outline-offset: 4px; }
+@media (max-width: 500px) { .staff-header { padding: 26px 20px; } .staff-header a { width: 180px; } .staff-shell { padding: 48px 24px 64px; } }

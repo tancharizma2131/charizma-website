@@ -1,0 +1,5 @@
+.connection-note { font-size: 11px; color: #666; line-height: 1.8; border-block: 1px solid #dedcd6; padding: 14px 0; margin: 24px 0; }
+.submission-feedback { font-size: 13px; line-height: 1.8; color: #555; margin: 20px 0 0; }
+.submission-feedback:empty { display: none; }
+.form-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.application-preview button:disabled { opacity: .55; cursor: wait; }
