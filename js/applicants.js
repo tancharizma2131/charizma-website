@@ -41,24 +41,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderList() {
         $('#applicant-list').innerHTML = records.map(record => `<button type="button" class="applicant-row" data-id="${record.id}" aria-pressed="${record.id === selectedId}" aria-label="Review ${escape(record.full_name)}, ${escape(record.status)}"><span class="row-initials" aria-hidden="true">${escape(record.full_name?.[0] || '?')}</span><span class="row-info"><span class="row-name">${escape(record.full_name)}</span><span class="row-meta">${escape(record.location || 'Location not provided')}${record.height ? ` · ${escape(record.height)} cm` : ''}</span><span class="row-date">${date(record.submitted_at)} · ${escape(record.source)}</span><span class="row-status">${escape(record.status)}</span></span></button>`).join('');
         $('#result-count').textContent = `${total} ${total === 1 ? 'applicant' : 'applicants'}`;
-        $('#load-more').hidden = records.length >= total;
+        $('#previous-page').disabled = page === 0;
+        $('#next-page').disabled = (page + 1) * 25 >= total;
+        $('#page-count').textContent = total ? `${page * 25 + 1}–${page * 25 + records.length} of ${total}` : '0 results';
         $('#empty-results').hidden = total !== 0;
         const filtered = $('#applicant-search').value.trim() || statusFilter !== 'All' || $('#source-filter').value !== 'all';
         $('#empty-results h3').textContent = filtered ? 'No matches.' : 'No applications yet.';
         $('#empty-results p').textContent = filtered ? 'Try a different name or filter.' : 'New applications and imported responses will appear here.';
         $('#clear-filters').hidden = !filtered;
     }
-    async function loadList(append = false) {
+    async function loadList(targetPage = 0) {
         const version = ++listVersion;
         $('#desk-error').textContent = '';
         $('#refresh-records').disabled = true;
-        $('#load-more').disabled = true;
-        const nextPage = append ? page + 1 : 0;
+        $('#previous-page').disabled = true; $('#next-page').disabled = true;
+        const nextPage = targetPage;
         try {
             const result = await request({ status: statusFilter, source: $('#source-filter').value, sort: $('#applicant-sort').value, search: $('#applicant-search').value.trim(), page: String(nextPage) });
             if (version !== listVersion || signedOut) return;
             page = nextPage; total = result.total;
-            records = append ? records.concat(result.records.filter(item => !records.some(old => old.id === item.id))) : result.records;
+            records = result.records;
+            $('#applicant-list').scrollTop = 0;
             $('#desk-content').hidden = false;
             $('#refresh-records').hidden = false;
             $('#retry-alerts').hidden = false;
@@ -77,13 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 $('#refresh-records').hidden = false;
             }
         } finally {
-            if (version === listVersion) { $('#refresh-records').disabled = false; $('#load-more').disabled = false; }
+            if (version === listVersion) { $('#refresh-records').disabled = false; $('#previous-page').disabled = page === 0; $('#next-page').disabled = (page + 1) * 25 >= total; }
         }
     }
     async function loadDetail(id, focus = false) {
         const version = ++detailVersion;
         selectedId = id; selectedRecord = null;
         const panel = $('#applicant-review');
+        panel.scrollTop = 0;
         panel.hidden = false; panel.innerHTML = '<p class="reference-note">Loading application…</p>';
         try {
             const record = await request({ id });
@@ -104,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const photos = [...record.photos].sort((a,b) => Object.keys(kinds).indexOf(a.kind) - Object.keys(kinds).indexOf(b.kind));
         const legacy = Array.isArray(record.legacy_photo_urls) ? record.legacy_photo_urls : [];
         const yesNo = value => value === true ? 'Yes' : value === false ? 'No' : 'Not provided';
-        panel.innerHTML = `<button type="button" class="review-back"><span aria-hidden="true">←</span> All applications</button><div class="review-top"><div><p class="review-kicker">${escape(record.source)}</p><h2 tabindex="-1">${escape(record.full_name)}</h2><p class="review-subtitle">${escape(record.location || 'Location not provided')}<br>Received ${date(record.submitted_at,true)} · Bangkok time</p></div><div class="review-status"><label for="review-status-select">Application status</label><select id="review-status-select">${statuses.map(status=>`<option${status===record.status?' selected':''}>${status}</option>`).join('')}</select></div></div>
+        panel.innerHTML = `<button type="button" class="review-back"><span aria-hidden="true">←</span> Back to applicants</button><div class="review-top"><div><p class="review-kicker">${escape(record.source)}</p><h2 tabindex="-1">${escape(record.full_name)}</h2><p class="review-subtitle">${escape(record.location || 'Location not provided')}<br>Received ${date(record.submitted_at,true)} · Bangkok time</p></div><div class="review-status"><label for="review-status-select">Application status</label><select id="review-status-select">${statuses.map(status=>`<option${status===record.status?' selected':''}>${status}</option>`).join('')}</select></div></div>
         <dl class="measurement-list">${[['Height',record.height],['Bust / chest',record.bust_chest],['Waist',record.waist],['Hips',record.hips]].map(([label,value])=>`<div><dt>${label}</dt><dd>${value==null?'—':`${escape(value)} <span>cm</span>`}</dd></div>`).join('')}</dl>
         <section class="review-section"><h3>Digitals</h3>${photos.length?`<div class="review-photos">${photos.map(photo=>`<button type="button" data-photo="${photo.id}" aria-label="Enlarge ${escape(kinds[photo.kind]||'digital')}"><img alt="${escape(record.full_name)} · ${escape(kinds[photo.kind]||'Digital')}" hidden><span>${escape(kinds[photo.kind]||'Digital')} ↗</span><span class="photo-error">Loading photo…</span></button>`).join('')}</div>`:'<p class="reference-note">No uploaded digitals are attached to this application.</p>'}${legacy.length?`<ul class="legacy-links">${legacy.map((url,i)=>`<li>${safeLink(url,`Original photo link ${i+1}`)}</li>`).join('')}</ul>`:''}</section>
         <dl class="review-contact">${[['Email',escape(record.email||'Not provided')],['Instagram',escape(record.instagram||'Not provided')],['Date of birth',date(record.birth_date)],['Portfolio',safeLink(record.portfolio_url,'Open portfolio')],['Tattoos',yesNo(record.tattoos)],['Piercings',yesNo(record.piercings)],['How they heard about Charizma',escape(record.heard_about||'Not provided')]].map(([label,value])=>`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl>
@@ -155,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let searchTimer;$('#applicant-search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>loadList(),300);});
     $('#source-filter').addEventListener('change',()=>loadList());$('#applicant-sort').addEventListener('change',()=>loadList());
     $('#clear-filters').addEventListener('click',()=>{$('#applicant-search').value='';$('#source-filter').value='all';statusFilter='All';$('#status-filters').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.status==='All'));loadList();});
-    $('#refresh-records').addEventListener('click',()=>{selectedId=null;loadList();});$('#load-more').addEventListener('click',()=>loadList(true));
+    $('#refresh-records').addEventListener('click',()=>{selectedId=null;loadList();});$('#previous-page').addEventListener('click',()=>{if(!pendingWrite&&page>0)loadList(page-1);});$('#next-page').addEventListener('click',()=>{if(!pendingWrite&&(page+1)*25<total)loadList(page+1);});
     $('#retry-alerts').addEventListener('click',async()=>{
         const button=$('#retry-alerts');button.disabled=true;$('#desk-error').textContent='';
         try{const response=await fetch('/api/notifications',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const result=await response.json();if(!response.ok)throw new Error(result.error||'Email alerts could not be checked.');$('#desk-status').textContent=result.sent?`${result.sent} email alerts sent.`:'Pending alerts checked.';}

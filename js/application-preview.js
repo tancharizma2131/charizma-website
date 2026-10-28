@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoData = new Map();
     let currentStep = 0;
     const photoTypes = [
-        { key: 'headshot', name: 'Headshot', hint: 'Face the camera, shoulders visible.', example: 'image/models/women/ksenia/Digitals/01.webp' },
-        { key: 'angle', name: '45° view', hint: 'Turn slightly to one side.', example: 'image/models/women/ksenia/Digitals/04.webp' },
-        { key: 'half', name: 'Half body', hint: 'From your head to your hips.', example: 'image/models/women/ksenia/Digitals/02.webp' },
-        { key: 'full', name: 'Full body', hint: 'Head to toe, with room around you.', example: 'image/models/women/ksenia/Digitals/04.webp' }
+        { key: 'headshot', name: 'Headshot', hint: 'Face the camera, shoulders visible.', example: 'image/models/women/kaia/Digitals/01.webp' },
+        { key: 'angle', name: '45° view', hint: 'Turn slightly to one side.', example: 'image/models/women/kaia/Digitals/02.webp' },
+        { key: 'half', name: 'Half body', hint: 'From your head to your hips.', example: 'image/models/women/kaia/Digitals/03.webp' },
+        { key: 'full', name: 'Full body', hint: 'Head to toe, with room around you.', example: 'image/models/women/kaia/Digitals/04.webp' }
     ];
     const today = new Date();
     document.querySelector('#birth-date').max = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -49,11 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const image = card.querySelector('img');
         const photo = photoTypes.find(item => item.key === key);
         image.src = data ? data.url : photo.example;
-        image.alt = !data || data.example ? `Ksenia: ${photo.name.toLowerCase()} example` : `Your selected ${photo.name.toLowerCase()}`;
+        image.alt = !data || data.example ? `Kaia: ${photo.name.toLowerCase()} example` : `Your selected ${photo.name.toLowerCase()}`;
         card.querySelector('.photo-frame').classList.toggle('has-photo', !!data);
         card.querySelector('.photo-frame').classList.toggle('is-example', !data || !!data.example);
         card.querySelector('.photo-action').textContent = data ? 'Change photo' : '+ Add your photo';
-        card.querySelector('.photo-credit').textContent = !data || data.example ? 'Example · Ksenia' : 'Your selected photo';
+        card.querySelector('.photo-credit').textContent = !data || data.example ? 'Example · Kaia' : 'Your selected photo';
         card.querySelector('.photo-remove').hidden = !data;
     }
 
@@ -65,13 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#digital-uploads').innerHTML = photoTypes.map((photo, index) => `
         <div class="photo-card" data-photo="${photo.key}">
             <div class="photo-frame is-example">
-                <img src="${photo.example}" alt="Ksenia: ${photo.name.toLowerCase()} example">
+                <img src="${photo.example}" alt="Kaia: ${photo.name.toLowerCase()} example">
                 <span class="photo-action" aria-hidden="true">+ Add your photo</span>
                 <input type="file" id="photo-${photo.key}" accept="image/jpeg,image/png,image/webp" aria-label="Add your ${photo.name.toLowerCase()} photo" aria-describedby="hint-${photo.key}">
             </div>
             <h3 id="label-${photo.key}"><span aria-hidden="true">0${index + 1}</span>${photo.name}</h3>
             <p id="hint-${photo.key}">${photo.hint}</p>
-            <p class="photo-credit">Example · Ksenia</p>
+            <p class="photo-credit">Example · Kaia</p>
             <button type="button" class="photo-remove" aria-label="Remove ${photo.name.toLowerCase()} photo" hidden>Remove</button>
         </div>`).join('');
 
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmation.hidden = true;
         showPhotoError('');
         moveStep(0);
-        status.textContent = 'Example details added. Ksenia’s digitals are selected for this demonstration only.';
+        status.textContent = 'Example details added. Kaia’s digitals are selected for this demonstration only.';
     });
     nextButton.disabled = false;
     document.querySelector('#example-details').disabled = false;

@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     const photoError=document.querySelector('#photo-error');
     const photos=new Map();let step=0,busy=false,enabled=false,ticket=null;
     const types=[
-        {key:'headshot',name:'Headshot',hint:'Face the camera, shoulders visible.',example:'image/models/women/ksenia/Digitals/01.webp'},
-        {key:'angle',name:'45° view',hint:'Turn slightly to one side.',example:'image/models/women/ksenia/Digitals/04.webp'},
-        {key:'half',name:'Half body',hint:'From your head to your hips.',example:'image/models/women/ksenia/Digitals/02.webp'},
-        {key:'full',name:'Full body',hint:'Head to toe, with room around you.',example:'image/models/women/ksenia/Digitals/04.webp'}
+        {key:'headshot',name:'Headshot',hint:'Face the camera, shoulders visible.',example:'image/models/women/kaia/Digitals/01.webp'},
+        {key:'angle',name:'45° view',hint:'Turn your face about 45° from the camera, as shown.',example:'image/models/women/kaia/Digitals/02.webp'},
+        {key:'half',name:'Half body',hint:'From your head to your hips.',example:'image/models/women/kaia/Digitals/03.webp'},
+        {key:'full',name:'Full body',hint:'Head to toe, with room around you.',example:'image/models/women/kaia/Digitals/04.webp'}
     ];
     const now=new Date();form.elements.birthDate.max=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
     function error(message=''){photoError.textContent=message;photoError.hidden=!message;}
@@ -31,11 +31,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
     function renderPhoto(key){
         const card=form.querySelector(`[data-photo="${key}"]`);const photo=types.find(p=>p.key===key);const selected=photos.get(key);
-        card.querySelector('img').src=selected?selected.url:photo.example;card.querySelector('img').alt=selected?`Your selected ${photo.name.toLowerCase()}`:`Ksenia: ${photo.name.toLowerCase()} example`;
+        card.querySelector('img').src=selected?selected.url:photo.example;card.querySelector('img').alt=selected?`Your selected ${photo.name.toLowerCase()}`:`${document.querySelector("#example-model").value === "nik" ? "Nik" : "Kaia"}: ${photo.name.toLowerCase()} example`;
         card.querySelector('.photo-frame').classList.toggle('is-example',!selected);card.querySelector('.photo-frame').classList.toggle('has-photo',!!selected);
-        card.querySelector('.photo-action').textContent=selected?'Change photo':'+ Add your photo';card.querySelector('.photo-credit').textContent=selected?'Your selected photo':'Example · Ksenia';card.querySelector('.photo-remove').hidden=!selected;
+        card.querySelector('.photo-action').textContent=selected?'Change photo':'+ Add your photo';card.querySelector('.photo-credit').textContent=selected?'Your selected photo':`Example · ${document.querySelector('#example-model').value === 'nik' ? 'Nik' : 'Kaia'}`;card.querySelector('.photo-remove').hidden=!selected;
     }
-    document.querySelector('#digital-uploads').innerHTML=types.map((photo,index)=>`<div class="photo-card" data-photo="${photo.key}"><div class="photo-frame is-example"><img src="${photo.example}" alt="Ksenia: ${photo.name.toLowerCase()} example"><span class="photo-action" aria-hidden="true">+ Add your photo</span><input type="file" id="photo-${photo.key}" accept="image/jpeg,image/png,image/webp" aria-label="Add your ${photo.name.toLowerCase()} photo" aria-describedby="hint-${photo.key}"></div><h3><span aria-hidden="true">0${index+1}</span>${photo.name}</h3><p id="hint-${photo.key}">${photo.hint}</p><p class="photo-credit">Example · Ksenia</p><button type="button" class="photo-remove" hidden>Remove</button></div>`).join('');
+    document.querySelector('#digital-uploads').innerHTML=types.map((photo,index)=>`<div class="photo-card" data-photo="${photo.key}"><div class="photo-frame is-example"><img src="${photo.example}" alt="Kaia: ${photo.name.toLowerCase()} example"><span class="photo-action" aria-hidden="true">+ Add your photo</span><input type="file" id="photo-${photo.key}" accept="image/jpeg,image/png,image/webp" aria-label="Add your ${photo.name.toLowerCase()} photo" aria-describedby="hint-${photo.key}"></div><h3><span aria-hidden="true">0${index+1}</span>${photo.name}</h3><p id="hint-${photo.key}">${photo.hint}</p><p class="photo-credit">Example · Kaia</p><button type="button" class="photo-remove" hidden>Remove</button></div>`).join('');
     let preparing=0;
     types.forEach(photo=>{
         const input=document.querySelector(`#photo-${photo.key}`);let version=0;
@@ -78,4 +78,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     back.addEventListener('click',()=>{if(!busy){move(0);steps[0].querySelector('h2').focus();}});
     move(0);
     api().then(data=>{enabled=!!data.enabled;next.disabled=!enabled;document.querySelector('#connection-note').textContent=enabled?'Your application and photos are shared privately with the Charizma team.':'This form is being connected. Please contact the Charizma team using the email link below.';}).catch(()=>{document.querySelector('#connection-note').textContent='This form is temporarily unavailable. Please contact the Charizma team using the email link below.';});
+    document.querySelector('#example-model').addEventListener('change', event => {
+        const male = event.target.value === 'nik';
+        const model = male ? 'Nik' : 'Kaia';
+        const base = male ? 'image/models/men/nik/Digitals/' : 'image/models/women/kaia/Digitals/';
+        types.forEach(photo => {
+            photo.example = base + ({headshot:'01',angle:'02',half:'03',full:'04'}[photo.key]) + '.webp';
+            const card = document.querySelector(`[data-photo="${photo.key}"]`);
+            if (card?.querySelector('.is-example')) {
+                card.querySelector('img').src = photo.example;
+                card.querySelector('img').alt = `${model}: ${photo.name.toLowerCase()} example`;
+            }
+            renderPhoto(photo.key);
+        });
+    });
 });

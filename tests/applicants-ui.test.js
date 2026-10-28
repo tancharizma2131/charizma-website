@@ -38,3 +38,25 @@ test('status and notes render the saved response after revisiting a record',asyn
   w.document.querySelector('#refresh-records').click();await wait();assert.match(w.document.querySelector('.note-list').textContent,/A clear portrait/);
  }finally{dom.window.close();}
 });
+test('pagination replaces rows, handles the last page, and filters reset to page one',async()=>{
+ const {dom,w,record}=await fixture(true);
+ try{
+  w.fetch=async url=>{
+   const p=new URL(url,'http://localhost').searchParams;
+   if(p.has('id'))return {ok:true,status:200,json:async()=>structuredClone({...record,id:p.get('id')})};
+   const page=Number(p.get('page'));const count=page===2?10:25;
+   return {ok:true,status:200,json:async()=>({records:Array.from({length:count},(_,i)=>({...record,id:`page-${page}-${i}`})),total:60})};
+  };
+  w.document.querySelector('#refresh-records').click();await wait();
+  assert.equal(w.document.querySelectorAll('.applicant-row').length,25);
+  assert.equal(w.document.querySelector('#previous-page').disabled,true);
+  w.document.querySelector('#next-page').click();await wait();
+  assert.equal(w.document.querySelectorAll('.applicant-row').length,25);
+  assert.equal(w.document.querySelector('#page-count').textContent,'26–50 of 60');
+  w.document.querySelector('#next-page').click();await wait();
+  assert.equal(w.document.querySelectorAll('.applicant-row').length,10);
+  assert.equal(w.document.querySelector('#next-page').disabled,true);
+  w.document.querySelector('#source-filter').dispatchEvent(new w.Event('change'));await wait();
+  assert.equal(w.document.querySelector('#page-count').textContent,'1–25 of 60');
+ }finally{dom.window.close();}
+});

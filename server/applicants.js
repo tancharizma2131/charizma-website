@@ -21,7 +21,7 @@ export function listQuery(params) {
     const sort = params.get('sort') || 'newest';
     const search = (params.get('search') || '').trim();
     if (!['All', ...STATUSES].includes(status) || !['all', 'Website', 'Google Form'].includes(source) || !Number.isInteger(page) || page < 0 || page > 20000 || !['newest', 'oldest'].includes(sort) || search.length > 200) throw new Error('INVALID_FILTER');
-    const query = new URLSearchParams({ select: summary, order: `submitted_at.${sort === 'oldest' ? 'asc' : 'desc'},id.asc`, limit: '50', offset: String(page * 50) });
+    const query = new URLSearchParams({ select: summary, order: `submitted_at.${sort === 'oldest' ? 'asc' : 'desc'},id.asc`, limit: '25', offset: String(page * 25) });
     if (status !== 'All') query.set('status', `eq.${status}`);
     if (source !== 'all') query.set('source', `eq.${source}`);
     if (search) {

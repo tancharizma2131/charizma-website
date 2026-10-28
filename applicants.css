@@ -13,3 +13,21 @@
 
 .desk-actions { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 28px; }
 #desk-error { flex-basis: 100%; }
+
+/* Keep browsing and reading contained without extending the whole document. */
+.desk-workspace { height: clamp(420px, 68dvh, 850px); align-items: stretch; }
+.applicant-index { display: flex; flex-direction: column; min-height: 0; }
+.index-heading { flex-shrink: 0; }
+#applicant-list { overflow-y: auto; min-height: 0; flex: 1; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.applicant-review { overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-gutter: stable; padding-right: 12px; }
+.list-pagination { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid #dedcd6; padding-top: 12px; margin-top: 12px; flex-shrink: 0; }
+.list-pagination button { background: none; border: 0; color: #333; font: inherit; font-size: 12px; min-height: 44px; cursor: pointer; padding: 4px; }
+.list-pagination span { font-size: 11px; color: #666; white-space: nowrap; }
+.list-pagination button:disabled { cursor: default; opacity: .35; }
+@media (max-width: 760px) {
+    .desk-workspace { height: auto; }
+    .applicant-index { height: 65dvh; min-height: 360px; }
+    .applicant-review { overflow: visible; padding-right: 0; }
+    .review-back { position: sticky; top: 0; z-index: 2; background: #faf9f6; width: 100%; text-align: left; }
+    #desk-content:has(.review-open) .desk-toolbar, #desk-content:has(.review-open) .status-filters { display: none; }
+}

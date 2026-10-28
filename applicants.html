@@ -9,8 +9,8 @@
     <link rel="icon" type="image/png" href="image/brand/cm.png">
     <link rel="stylesheet" href="style.min.css?v=20261028-entry1">
     <link rel="stylesheet" href="applicants-preview.css?v=20261028-footer1">
-    <link rel="stylesheet" href="applicants.css?v=20261028-connected1">
-    <script src="js/applicants.js?v=20261028-fresh1" defer></script>
+    <link rel="stylesheet" href="applicants.css?v=20261029-paging1">
+    <script src="js/applicants.js?v=20261029-paging1" defer></script>
     <script src="js/footer.js?v=20261028-footer1" defer></script>
 </head>
 <body class="applicant-desk">
@@ -35,7 +35,7 @@
             <section class="applicant-index" aria-labelledby="index-heading">
                 <div class="index-heading"><h2 id="index-heading">Applicant list</h2><span id="result-count" role="status"></span></div>
                 <div id="applicant-list"></div>
-                <button id="load-more" class="desk-text-button" type="button" hidden>Load more applications</button>
+                <div class="list-pagination" role="navigation" aria-label="Applicant pages"><button id="previous-page" type="button" disabled>← Previous</button><span id="page-count" role="status"></span><button id="next-page" type="button" disabled>Next →</button></div>
                 <div id="empty-results" class="empty-results" hidden><h3>No applications yet.</h3><p>New applications and imported responses will appear here.</p><button id="clear-filters" type="button">Clear filters</button></div>
             </section>
             <section class="applicant-review" id="applicant-review" aria-label="Applicant details" hidden></section>

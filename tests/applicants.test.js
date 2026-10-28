@@ -20,7 +20,7 @@ test('anonymous requests cannot read or mutate applicant records',async()=>{
 test('list pagination and filter queries cannot alter the selected fields',()=>{
  const q=listQuery(new URLSearchParams({search:'a\",status.eq.Archived)',page:'2',source:'Google Form',status:'Reviewing'}));
  const parsed=new URL(q.path,'https://example.com').searchParams;
- assert.equal(parsed.get('offset'),'100');assert.equal(parsed.get('source'),'eq.Google Form');assert.equal(parsed.get('status'),'eq.Reviewing');assert.match(parsed.get('or'),/\\"/);
+ assert.equal(parsed.get('offset'),'50');assert.equal(parsed.get('source'),'eq.Google Form');assert.equal(parsed.get('status'),'eq.Reviewing');assert.match(parsed.get('or'),/\\"/);
  assert.equal(parsed.get('select').includes('legacy_response'),false);
  assert.throws(()=>listQuery(new URLSearchParams({status:'Other'})),/INVALID_FILTER/);
  assert.throws(()=>listQuery(new URLSearchParams({page:'-1'})),/INVALID_FILTER/);
