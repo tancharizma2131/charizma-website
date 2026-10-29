@@ -16,3 +16,6 @@ js/application-preview.js
 js/applicants-preview.js
 scripts/import-google-form.py
 scripts/serve-app.js
+
+# Recreated from the original model photos during build
+image/responsive/
