@@ -3,6 +3,7 @@ import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const publicFiles = [
+ 'robots.txt','sitemap.xml',
  'index.html','women.html','men.html','kaia.html','ksenia.html','polly.html','uli.html','nik.html','about.html','be-charizmatic.html','apply.html','staff.html','applicants.html',
  'style.min.css','home.css','roster.css','model.css','about.css','application-preview.css','apply.css','applicants-preview.css','applicants.css','staff.css',
  'js/main.min.js','js/footer.js','js/apply.js','js/applicants.js','js/staff.js'

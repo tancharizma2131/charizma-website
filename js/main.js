@@ -444,6 +444,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'gallery-image-btn';
+                // Reserve each lazy image's space before anchor navigation measures the feed.
+                const width = Number(img.getAttribute('width'));
+                const height = Number(img.getAttribute('height'));
+                if (width > 0 && height > 0) button.style.aspectRatio = `${width} / ${height}`;
                 button.setAttribute('aria-label', `Enlarge ${img.alt}`);
                 button.setAttribute('aria-haspopup', 'dialog');
                 img.before(button);

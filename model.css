@@ -336,3 +336,6 @@
     .page-model-editorial .model-links .comp-card-link { grid-column: 1 / -1; }
     .page-model-editorial .model-links a { margin-top: 0; border-bottom: 0; }
 }
+
+/* Keep the Digitals heading clear of the fixed navigation. */
+#digitals { scroll-margin-top: calc(var(--header-h) + 20px); }
