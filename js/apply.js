@@ -18,7 +18,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     function move(index){step=index;steps.forEach((el,i)=>{el.hidden=i!==index;el.disabled=i!==index;});progress.forEach((el,i)=>{if(i===index)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});back.hidden=index===0;document.querySelector('#step-count').textContent=`Step ${index+1} of 2`;next.innerHTML=index===1?'Submit application <span aria-hidden="true">→</span>':'Continue <span aria-hidden="true">→</span>';}
     function fields(){return Object.fromEntries(['fullName','birthDate','location','email','instagram','height','bust','waist','hips','tattoos','piercings','portfolio','source'].map(key=>[key,form.elements.namedItem(key).value]));}
     function newTicket(){return {id:crypto.randomUUID(),token:Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,'0')).join(''),uploaded:new Set()};}
-    async function api(body){const response=await fetch(body?'/api/submit':`/api/submit?check=${crypto.randomUUID()}`,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',...(body?{headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{})});const data=await response.json().catch(()=>({}));if(!response.ok){const e=new Error(data.error||'We couldn’t confirm your submission. Try again without refreshing the page.');e.status=response.status;throw e;}return data;}
+    // Cover response bodies as well as connection setup; abort releases network work.
+    async function boundedRequest(url,options,readBody,timeout){
+        const controller=new AbortController();let timer;
+        const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{
+            const error=new Error('The connection took too long. Your details and photos are still here. Please retry without refreshing the page.');
+            reject(error);controller.abort();
+        },timeout);});
+        try{return await Promise.race([(async()=>{
+            const response=await fetch(url,{...options,signal:controller.signal});
+            const data=readBody?await response.json().catch(()=>({})):null;
+            return {response,data};
+        })(),deadline]);}finally{clearTimeout(timer);}
+    }
+    async function api(body){
+        const {response,data}=await boundedRequest(body?'/api/submit':`/api/submit?check=${crypto.randomUUID()}`,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',...(body?{headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{})},true,body?(body.action==='finish'?90000:60000):15000);
+        if(!response.ok){const e=new Error(data.error||'We couldn’t confirm your submission. Try again without refreshing the page.');e.status=response.status;e.field=data.field;throw e;}return data;
+    }
     async function prepareImage(file){
         const url=URL.createObjectURL(file);const image=new Image();image.src=url;
         try{
@@ -49,8 +65,42 @@ document.addEventListener('DOMContentLoaded',()=>{
         });
         form.querySelector(`[data-photo="${photo.key}"] .photo-remove`).addEventListener('click',()=>{++version;const old=photos.get(photo.key);if(old)URL.revokeObjectURL(old.url);photos.delete(photo.key);input.value='';ticket=null;renderPhoto(photo.key);input.focus();});
     });
-    form.addEventListener('input',event=>{if(event.target.type!=='file')ticket=null;});
-    function validate(){const invalid=Array.from(steps[step].querySelectorAll('input,select,textarea')).find(el=>!el.checkValidity());if(invalid){invalid.reportValidity();return false;}if(step===1&&photos.size!==4){error('Please add your own four digitals before submitting.');document.querySelector(`#photo-${types.find(p=>!photos.has(p.key)).key}`).focus();return false;}error();return true;}
+    function fieldError(el,message=''){
+        el.setCustomValidity(message);
+        if(message)el.setAttribute('aria-invalid','true');else el.removeAttribute('aria-invalid');
+        const id=`${el.id}-error`;let note=document.getElementById(id);
+        if(message&&!note){note=document.createElement('p');note.id=id;note.className='field-error';el.insertAdjacentElement('afterend',note);el.setAttribute('aria-describedby',`${el.getAttribute('aria-describedby')||''} ${id}`.trim());}
+        if(note){note.textContent=message;note.hidden=!message;}
+    }
+    form.addEventListener('input',event=>{if(event.target.type!=='file'){if(event.target.name)ticket=null;fieldError(event.target);}});
+    function fieldMessage(el){
+        const value=el.value.trim(),key=el.name;
+        const labels={fullName:'name',birthDate:'date of birth',location:'city and country',email:'email address',instagram:'Instagram',source:'answer about how you heard of Charizma'};
+        if(labels[key]&&(!value||value.length>Number(el.maxLength>0?el.maxLength:200)||/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value)))return `Please check your ${labels[key]}.`;
+        if(key==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return 'Please check your email address.';
+        if(key==='birthDate'){
+            const dob=new Date(`${value}T00:00:00Z`);
+            if(!/^\d{4}-\d{2}-\d{2}$/.test(value)||Number.isNaN(dob.valueOf())||dob.toISOString().slice(0,10)!==value||dob>new Date()||dob.getUTCFullYear()<1900)return 'Please check your date of birth.';
+        }
+        if(['height','bust','waist','hips'].includes(key)){
+            const n=Number(value);if(!value||!Number.isFinite(n)||n<=0||n>300||!Number.isInteger(n*2))return 'Please enter measurements in centimetres, using whole or half centimetres.';
+        }
+        if(['tattoos','piercings'].includes(key)&&!['Yes','No'].includes(value))return `Please answer the ${key} question.`;
+        if(key==='instagram'&&!/^@?[A-Za-z0-9._]{1,30}$/.test(value)){
+            try{const u=new URL(value);if(u.protocol!=='https:'||!['instagram.com','www.instagram.com'].includes(u.hostname)||!/^\/[A-Za-z0-9._]{1,30}\/?$/.test(u.pathname)||u.username||u.password)throw new Error();}catch{return 'Please enter your Instagram username or profile link.';}
+        }
+        if(key==='portfolio'&&value){try{const u=new URL(value);if(value.length>1000||/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value)||!['https:','http:'].includes(u.protocol)||u.username||u.password)throw new Error();}catch{return 'Please enter a valid portfolio link.';}}
+        return '';
+    }
+    function validate(){
+        let first;
+        for(const el of steps[step].querySelectorAll('input:not([type="file"]),select,textarea')){
+            fieldError(el);const message=fieldMessage(el)||(!el.checkValidity()?el.validationMessage:'');
+            fieldError(el,message);if(message&&!first)first=el;
+        }
+        if(first){first.focus();first.reportValidity();return false;}
+        if(step===1&&photos.size!==4){error('Please add your own four digitals before submitting.');document.querySelector(`#photo-${types.find(p=>!photos.has(p.key)).key}`).focus();return false;}error();return true;
+    }
     function setBusy(value){busy=value;form.setAttribute('aria-busy',String(value));form.querySelectorAll('input,select,textarea,button').forEach(el=>el.disabled=value);next.disabled=value||!enabled||preparing>0;}
     async function submit(){
         ticket ||= newTicket();const saved=ticket;const values=fields();setBusy(true);
@@ -61,12 +111,18 @@ document.addEventListener('DOMContentLoaded',()=>{
                 const upload=saved.uploads[i];if(saved.uploaded.has(upload.kind))continue;
                 status.textContent=`Uploading photo ${i+1} of 4…`;
                 const blob=photos.get(upload.kind).blob;
-                const response=await fetch(upload.url,{method:'PUT',headers:{'Content-Type':blob.type,'cache-control':'max-age=0','x-upsert':'false'},body:blob});
-                if(!response.ok){const data=await response.json().catch(()=>({}));if(response.status!==409&&data.error!=='Duplicate'&&String(data.statusCode)!=='409')throw new Error('A photo upload was interrupted. Please try again without refreshing the page.');}
+                try{
+                    const {response,data}=await boundedRequest(upload.url,{method:'PUT',headers:{'Content-Type':blob.type,'cache-control':'max-age=0','x-upsert':'false'},body:blob},true,60000);
+                    if(!response.ok&&response.status!==409&&data.error!=='Duplicate'&&String(data.statusCode)!=='409')throw new Error('A photo upload was interrupted. Your photos are still here. Please retry without refreshing the page.');
+                }catch(error){
+                    // Refresh signed URLs on the next attempt, keeping the same ticket
+                    // and skipping photos whose uploads were already confirmed.
+                    saved.uploads=null;throw error;
+                }
                 saved.uploaded.add(upload.kind);
             }
             status.textContent='Saving your application…';const result=await api({action:'finish',id:saved.id,token:saved.token});complete(result.reference,values);
-        }catch(e){if(e.status===410)ticket=null;status.textContent=e.message||'We couldn’t confirm your submission. Please try again without refreshing the page.';}
+        }catch(e){if(e.status===410)ticket=null;if(e.field){const el=form.elements.namedItem(e.field);if(el){const index=steps.findIndex(s=>s.contains(el));setBusy(false);if(index>=0)move(index);fieldError(el,e.message);el.focus();}}status.textContent=e.message||'We couldn’t confirm your submission. Your details and photos are still here. Please retry without refreshing the page.';if(!e.field)next.textContent='Retry application';}
         finally{setBusy(false);}
     }
     function complete(reference,values){

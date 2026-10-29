@@ -23,7 +23,7 @@ export async function deliverNotifications(limit=3,applicationId=null){
 }
 export async function cleanupExpiredSubmissions(){
     adminConfig();
-    const tickets=await adminRequest(`/rest/v1/application_submissions?${new URLSearchParams({select:'id,manifest,completed_at,expires_at',expires_at:`lt.${new Date().toISOString()}`,cleaned_at:'is.null',limit:'20'})}`);
+    const tickets=await adminRequest(`/rest/v1/application_submissions?${new URLSearchParams({select:'id,manifest,completed_at,expires_at',expires_at:`lt.${new Date().toISOString()}`,cleaned_at:'is.null',order:'expires_at.asc,id.asc',limit:'20'})}`);
     for(const ticket of tickets){
         const paths=ticket.manifest.map(f=>pendingPath(ticket.id,f));
         await adminRequest('/storage/v1/object/application-uploads',{method:'DELETE',body:{prefixes:paths}});
@@ -31,5 +31,6 @@ export async function cleanupExpiredSubmissions(){
         // Keep only the hashed rate-limit record for 48h. Remove private draft answers.
         await adminRequest(`/rest/v1/application_submissions?id=eq.${ticket.id}`,{method:'PATCH',body:{payload:{},manifest:[],cleaned_at:new Date().toISOString()}});
     }
-    await adminRequest(`/rest/v1/application_submissions?created_at=lt.${encodeURIComponent(new Date(Date.now()-172800000).toISOString())}`,{method:'DELETE'});
+    // Never discard manifests for backlog tickets or failed storage deletions.
+    await adminRequest(`/rest/v1/application_submissions?cleaned_at=not.is.null&created_at=lt.${encodeURIComponent(new Date(Date.now()-172800000).toISOString())}`,{method:'DELETE'});
 }

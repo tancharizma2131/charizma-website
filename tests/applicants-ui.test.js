@@ -60,3 +60,39 @@ test('pagination replaces rows, handles the last page, and filters reset to page
   assert.equal(w.document.querySelector('#page-count').textContent,'1–25 of 60');
  }finally{dom.window.close();}
 });
+for(const outcome of ['success','failure'])test(`delayed note save protects the draft and recovers after ${outcome}`,async()=>{
+ const {dom,w,record}=await fixture();
+ try{
+  const original=w.fetch;let release;let posts=0;
+  w.fetch=async(url,options={})=>{
+   if(options.method!=='POST')return original(url,options);
+   posts++;await new Promise(resolve=>{release=resolve;});
+   if(outcome==='failure')return {ok:false,status:503,json:async()=>({error:'Temporary failure'})};
+   return original(url,options);
+  };
+  const input=w.document.querySelector('#review-note');const form=w.document.querySelector('.note-form');const button=form.querySelector('button');
+  input.value='  Keep this note  ';input.dispatchEvent(new w.Event('input'));
+  form.dispatchEvent(new w.Event('submit',{cancelable:true}));
+  assert.equal(input.readOnly,true);assert.equal(button.disabled,true);assert.equal(button.textContent,'Saving…');
+  form.dispatchEvent(new w.Event('submit',{cancelable:true}));assert.equal(posts,1);
+  release();await wait();
+  const current=w.document.querySelector('#review-note');
+  assert.equal(current.readOnly,false);assert.equal(w.document.querySelector('.note-form button').disabled,false);
+  if(outcome==='failure'){
+   assert.equal(current.value,'  Keep this note  ');assert.equal(record.notes.length,0);
+   w.document.querySelector('#refresh-records').click();await wait();
+   assert.equal(w.document.querySelector('#review-note').value,'  Keep this note  ');
+  }else{assert.equal(current.value,'');assert.equal(record.notes[0].body,'Keep this note');}
+ }finally{dom.window.close();}
+});
+test('a newer draft survives completion of an older pending save',async()=>{
+ const {dom,w,record}=await fixture();try{
+  const original=w.fetch;let release;
+  w.fetch=async(url,options={})=>{if(options.method==='POST')await new Promise(resolve=>{release=resolve;});return original(url,options);};
+  const input=w.document.querySelector('#review-note');input.value='First note';input.dispatchEvent(new w.Event('input'));
+  w.document.querySelector('.note-form').dispatchEvent(new w.Event('submit',{cancelable:true}));
+  // A newer editor instance or programmatic draft update must also be preserved.
+  input.value='Newer draft';input.dispatchEvent(new w.Event('input'));release();await wait();
+  assert.equal(record.notes[0].body,'First note');assert.equal(w.document.querySelector('#review-note').value,'Newer draft');
+ }finally{dom.window.close();}
+});

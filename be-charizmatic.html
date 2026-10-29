@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="application-preview.css?v=20261029-full-frame">
     <script src="js/main.min.js?v=20261028-footer1" defer></script>
     <link rel="stylesheet" href="apply.css?v=20261028-1">
-    <script src="js/apply.js?v=20261029-examples2" defer></script>
+    <script src="js/apply.js?v=20261029-validation1" defer></script>
     <script src="js/footer.js?v=20261028-footer1" defer></script>
 </head>
 <body class="application-preview">
@@ -38,16 +38,16 @@
                         <p class="required-note">All fields are required unless marked optional.</p>
                         <div class="apply-grid">
                             <div class="apply-field"><label for="full-name">Name</label><input id="full-name" name="fullName" autocomplete="name" required maxlength="200"></div>
-                            <div class="apply-field"><label for="birth-date">Date of birth</label><input id="birth-date" name="birthDate" type="date" autocomplete="bday" required></div>
+                            <div class="apply-field"><label for="birth-date">Date of birth</label><input id="birth-date" name="birthDate" min="1900-01-01" type="date" autocomplete="bday" required></div>
                             <div class="apply-field"><label for="location">City and country</label><input id="location" name="location" placeholder="e.g. Bangkok, Thailand" required maxlength="200"></div>
                             <div class="apply-field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
                         </div>
                         <h3 class="form-group-title">Measurements <span>in centimetres</span></h3>
                         <div class="apply-grid measurements-grid">
-                            <div class="apply-field"><label for="height">Height</label><input id="height" name="height" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
-                            <div class="apply-field"><label for="bust">Bust / chest</label><input id="bust" name="bust" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
-                            <div class="apply-field"><label for="waist">Waist</label><input id="waist" name="waist" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
-                            <div class="apply-field"><label for="hips">Hips</label><input id="hips" name="hips" type="number" min="1" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="height">Height</label><input id="height" name="height" type="number" min="0.5" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="bust">Bust / chest</label><input id="bust" name="bust" type="number" min="0.5" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="waist">Waist</label><input id="waist" name="waist" type="number" min="0.5" max="300" step="0.5" required inputmode="decimal"></div>
+                            <div class="apply-field"><label for="hips">Hips</label><input id="hips" name="hips" type="number" min="0.5" max="300" step="0.5" required inputmode="decimal"></div>
                         </div>
                         <div class="apply-grid additional-details">
                             <div class="apply-field"><label for="tattoos">Tattoos</label><select id="tattoos" name="tattoos" required><option value="">Choose an answer</option><option>No</option><option>Yes</option></select></div>
@@ -64,7 +64,7 @@
                         <div class="photo-grid" id="digital-uploads"></div>
                         <p id="photo-error" class="field-error" role="alert" hidden></p>
                         <div class="apply-grid photo-details">
-                            <div class="apply-field full-width"><label for="portfolio">Portfolio link <span>optional</span></label><input id="portfolio" name="portfolio" type="url" placeholder="https://" maxlength="1000"></div>
+                            <div class="apply-field full-width"><label for="portfolio">Portfolio link <span>optional</span></label><input id="portfolio" maxlength="1000" name="portfolio" type="url" placeholder="https://" maxlength="1000"></div>
                         </div>
                         <p class="application-review-note">You can go back to review your answers before submitting.</p>
                         <p class="application-review-note">Your details and photos are shared privately with the Charizma team to review your application and contact you.</p>

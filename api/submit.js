@@ -24,5 +24,5 @@ export default async function handler(req,res){
             return json(res,200,{ok:true,...result});
         }
         throw new SubmissionError('Invalid request.');
-    }catch(error){return json(res,error instanceof SubmissionError?error.status:503,{error:error instanceof SubmissionError?error.message:'We couldn’t confirm your submission. Please try again without refreshing the page.'});}
+    }catch(error){return json(res,error instanceof SubmissionError?error.status:503,{...(error instanceof SubmissionError&&error.field?{field:error.field}:{}),error:error instanceof SubmissionError?error.message:'We couldn’t confirm your submission. Please try again without refreshing the page.'});}
 }

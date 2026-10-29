@@ -1,0 +1,18 @@
+# Never upload local credentials or internal records.
+.env*
+.git/
+.vercel/
+node_modules/
+dist/
+*.zip
+*.csv
+*.log
+*.md
+supabase/
+tests/
+**/__pycache__/
+*-preview.html
+js/application-preview.js
+js/applicants-preview.js
+scripts/import-google-form.py
+scripts/serve-app.js

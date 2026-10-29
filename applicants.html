@@ -9,8 +9,8 @@
     <link rel="icon" type="image/png" href="image/brand/cm.png">
     <link rel="stylesheet" href="style.min.css?v=20261028-entry1">
     <link rel="stylesheet" href="applicants-preview.css?v=20261028-footer1">
-    <link rel="stylesheet" href="applicants.css?v=20261029-paging1">
-    <script src="js/applicants.js?v=20261029-paging1" defer></script>
+    <link rel="stylesheet" href="applicants.css?v=20261029-workspace1">
+    <script src="js/applicants.js?v=20261029-note-save1" defer></script>
     <script src="js/footer.js?v=20261028-footer1" defer></script>
 </head>
 <body class="applicant-desk">
@@ -24,6 +24,7 @@
         <div class="desk-title"><h1>Applications</h1><p>A place to discover your next distinctive face.</p></div>
         <p id="desk-connection" class="desk-connection" role="status">Checking your staff session…</p>
         <noscript><p>Please enable JavaScript to use the private dashboard.</p></noscript>
+        <p id="desk-error" role="alert"></p>
         <div id="desk-content" hidden>
         <div class="desk-toolbar">
             <div class="desk-search"><label for="applicant-search">Search applicants</label><input id="applicant-search" type="search" placeholder="Name, city or email" autocomplete="off"></div>
@@ -41,7 +42,7 @@
             <section class="applicant-review" id="applicant-review" aria-label="Applicant details" hidden></section>
         </div>
         </div>
-        <div class="desk-actions"><button id="refresh-records" class="desk-text-button" type="button" hidden>Refresh applications</button><button id="retry-alerts" class="desk-text-button" type="button" hidden>Retry email alerts</button><p id="desk-error" role="alert"></p></div>
+        <div class="desk-actions"><button id="refresh-records" class="desk-text-button" type="button" hidden>Refresh applications</button><button id="retry-alerts" class="desk-text-button" type="button" hidden>Retry email alerts</button></div>
         <p id="desk-status" class="visually-hidden" role="status"></p>
     </main>
     <footer></footer>

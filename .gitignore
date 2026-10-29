@@ -14,3 +14,7 @@ video/**
 .vercel
 
 .DS_Store
+
+# Generated public deployment output
+dist/
+__pycache__/

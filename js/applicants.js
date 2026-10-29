@@ -127,11 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input',()=>{input.setCustomValidity('');drafts.set(record.id,input.value);});
         panel.querySelector('.note-form').addEventListener('submit',async event=>{
             event.preventDefault(); if(pendingWrite)return;
-            const text=input.value.trim(); if(!text){input.setCustomValidity('Please write a note first.');input.reportValidity();return;}
-            input.setCustomValidity(''); pendingWrite=true; const button=event.currentTarget.querySelector('button');button.disabled=true;
-            try{await request({}, {action:'note',id:record.id,text});drafts.delete(record.id);if(selectedId===record.id)await loadDetail(record.id);$('#desk-status').textContent='Team note saved.';}
+            const submittedDraft=input.value; const text=submittedDraft.trim(); if(!text){input.setCustomValidity('Please write a note first.');input.reportValidity();return;}
+            input.setCustomValidity(''); pendingWrite=true; const button=event.currentTarget.querySelector('button');button.disabled=true;button.textContent='Saving…';input.readOnly=true;
+            try{await request({}, {action:'note',id:record.id,text});if(drafts.get(record.id)===submittedDraft)drafts.delete(record.id);if(selectedId===record.id)await loadDetail(record.id);$('#desk-status').textContent='Team note saved.';}
             catch(error){showError({message:`${error.message} Refresh the application before trying to save this note again.`});}
-            finally{pendingWrite=false;button.disabled=false;}
+            finally{pendingWrite=false;button.disabled=false;button.textContent='Save note';input.readOnly=false;}
         });
         panel.querySelectorAll('[data-photo]').forEach(button=>{
             const photo=photos.find(item=>item.id===button.dataset.photo);

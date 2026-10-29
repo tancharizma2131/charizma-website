@@ -31,3 +31,54 @@
     .review-back { position: sticky; top: 0; z-index: 2; background: #faf9f6; width: 100%; text-align: left; }
     #desk-content:has(.review-open) .desk-toolbar, #desk-content:has(.review-open) .status-filters { display: none; }
 }
+
+/* Readable operational text; keep the editorial headings and warm palette. */
+.desk-label, .desk-toolbar label, .review-status label, .note-form label,
+.index-heading h2, .index-heading span, .review-kicker,
+.review-contact dt, .measurement-list dt, .measurement-list dd span,
+.reference-note, .review-photos span, .note-list small, .activity-list small,
+.no-notes, .empty-results p, .status-filter span { font-size: 12px; color: #595750; }
+.row-meta, .row-date { font-size: 12px; line-height: 1.5; color: #595750; }
+.row-status { font-size: 12px; margin-top: 4px; }
+.row-initials { width: 32px; height: 42px; font-size: 20px; color: #595750; }
+.applicant-row { grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 14px 10px; }
+.row-name { font-size: 21px; margin-bottom: 4px; overflow-wrap: anywhere; }
+.status-filter { font-size: 13px; color: #595750; }
+.list-pagination span { font-size: 12px; color: #595750; }
+.note-form button, .desk-form-link { font-size: 12px; }
+#desk-error { margin: 4px 0 12px; padding: 10px 12px; border-left: 2px solid #84402d; background: #f2ebe5; flex-shrink: 0; }
+@media (min-width: 761px) {
+    body.applicant-desk { height: 100dvh; min-height: 720px; display: flex; flex-direction: column; }
+    .desk-header { flex-shrink: 0; padding: 10px 32px; }
+    .desk-logo { width: 170px; }
+    .desk-main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 16px 32px 8px; }
+    .desk-title { margin-bottom: 4px; }
+    .desk-title h1 { font-size: 34px; }
+    .desk-connection { border: 0; padding: 0; margin: 0 0 12px; font-size: 12px; line-height: 1.5; }
+    #desk-content { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+    .desk-toolbar { margin-bottom: 8px; gap: 24px; flex-shrink: 0; }
+    .status-filters { flex-shrink: 0; }
+    .status-filter { padding-bottom: 10px; }
+    .desk-workspace { flex: 1; min-height: 0; height: auto; gap: 24px; }
+    .index-heading { margin: 14px 0 10px; }
+    .applicant-review { padding-top: 14px; padding-left: 24px; }
+    .review-top h2 { font-size: 36px; }
+    .review-kicker { margin-bottom: 6px; }
+    .measurement-list { margin-bottom: 20px; padding-block: 14px; }
+    .review-section { margin-bottom: 22px; }
+    .desk-actions { margin-top: 4px; flex-shrink: 0; }
+    .desk-actions button { min-height: 36px; padding-block: 8px; }
+    .applicant-desk .site-footer { padding: 10px 0; flex-shrink: 0; }
+}
+@media (max-width: 760px) {
+    .desk-header { padding-block: 10px; }
+    .desk-main { padding-top: 20px; }
+    .desk-title { margin-bottom: 12px; }
+    .desk-title h1 { font-size: 36px; }
+    .desk-title p { margin-top: 6px; }
+    .desk-connection { border: 0; padding: 0; margin-bottom: 18px; }
+    .desk-toolbar { margin-bottom: 12px; }
+    .review-top { flex-wrap: wrap; }
+    .review-top h2 { overflow-wrap: anywhere; }
+    .review-status { width: 140px; }
+}

@@ -5,7 +5,7 @@ import { config } from './staff-auth.js';
 export const KINDS=['headshot','angle','half','full'];
 export const MAX_UPLOAD=2*1024*1024;
 export class SubmissionError extends Error {
-    constructor(message,status=400){super(message);this.status=status;}
+    constructor(message,status=400,field=null){super(message);this.status=status;this.field=field;}
 }
 export function adminConfig(){
     const {url}=config();const key=process.env.SUPABASE_SECRET_KEY;
@@ -34,24 +34,25 @@ export function clientIP(req){
     return ip;
 }
 function text(value,name,max=200){
-    if(typeof value!=='string'||!value.trim()||value.trim().length>max||/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value))throw new SubmissionError(`Please check your ${name}.`);
+    const field=({name:"fullName","date of birth":"birthDate","city and country":"location","email address":"email",Instagram:"instagram","answer about how you heard of Charizma":"source","portfolio link":"portfolio"})[name];
+    if(typeof value!=='string'||!value.trim()||value.trim().length>max||/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value))throw new SubmissionError(`Please check your ${name}.`,400,field);
     return value.trim();
 }
 export function validateApplication(input,files,now=new Date()){
     if(!input||typeof input!=='object'||Array.isArray(input))throw new SubmissionError('Please check your application details.');
     const data={fullName:text(input.fullName,'name'),birthDate:text(input.birthDate,'date of birth',10),location:text(input.location,'city and country'),email:text(input.email,'email address',254).toLowerCase(),instagram:text(input.instagram,'Instagram'),source:text(input.source,'answer about how you heard of Charizma',500)};
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))throw new SubmissionError('Please check your email address.');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))throw new SubmissionError('Please check your email address.',400,'email');
     const dob=new Date(`${data.birthDate}T00:00:00Z`);
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate)||Number.isNaN(dob.valueOf())||dob.toISOString().slice(0,10)!==data.birthDate||dob>now||dob.getUTCFullYear()<1900)throw new SubmissionError('Please check your date of birth.');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate)||Number.isNaN(dob.valueOf())||dob.toISOString().slice(0,10)!==data.birthDate||dob>now||dob.getUTCFullYear()<1900)throw new SubmissionError('Please check your date of birth.',400,'birthDate');
     for(const key of ['height','bust','waist','hips']){
-        if(!['string','number'].includes(typeof input[key])||String(input[key]).trim()==='')throw new SubmissionError('Please check your measurements.');
-        const value=Number(input[key]);if(!Number.isFinite(value)||value<=0||value>300||!Number.isInteger(value*2))throw new SubmissionError('Please enter measurements in centimetres, using whole or half centimetres.');data[key]=value;
+        if(!['string','number'].includes(typeof input[key])||String(input[key]).trim()==='')throw new SubmissionError('Please check your measurements.',400,key);
+        const value=Number(input[key]);if(!Number.isFinite(value)||value<=0||value>300||!Number.isInteger(value*2))throw new SubmissionError('Please enter measurements in centimetres, using whole or half centimetres.',400,key);data[key]=value;
     }
-    for(const key of ['tattoos','piercings']){if(!['Yes','No',true,false].includes(input[key]))throw new SubmissionError(`Please answer the ${key} question.`);data[key]=input[key]===true||input[key]==='Yes';}
+    for(const key of ['tattoos','piercings']){if(!['Yes','No',true,false].includes(input[key]))throw new SubmissionError(`Please answer the ${key} question.`,400,key);data[key]=input[key]===true||input[key]==='Yes';}
     if(!/^@?[A-Za-z0-9._]{1,30}$/.test(data.instagram)){
-        try{const u=new URL(data.instagram);if(u.protocol!=='https:'||!['instagram.com','www.instagram.com'].includes(u.hostname)||!/^\/[A-Za-z0-9._]{1,30}\/?$/.test(u.pathname)||u.username||u.password)throw new Error();}catch{throw new SubmissionError('Please enter your Instagram username or profile link.');}
+        try{const u=new URL(data.instagram);if(u.protocol!=='https:'||!['instagram.com','www.instagram.com'].includes(u.hostname)||!/^\/[A-Za-z0-9._]{1,30}\/?$/.test(u.pathname)||u.username||u.password)throw new Error();}catch{throw new SubmissionError('Please enter your Instagram username or profile link.',400,'instagram');}
     }
-    data.portfolio='';if(input.portfolio){const value=text(input.portfolio,'portfolio link',1000);try{const u=new URL(value);if(!['https:','http:'].includes(u.protocol)||u.username||u.password)throw new Error();data.portfolio=u.href;}catch{throw new SubmissionError('Please enter a valid portfolio link.');}}
+    data.portfolio='';if(input.portfolio){const value=text(input.portfolio,'portfolio link',1000);try{const u=new URL(value);if(!['https:','http:'].includes(u.protocol)||u.username||u.password)throw new Error();data.portfolio=u.href;}catch{throw new SubmissionError('Please enter a valid portfolio link.',400,'portfolio');}}
     if(!Array.isArray(files)||files.length!==4||new Set(files.map(f=>f?.kind)).size!==4)throw new SubmissionError('Please add all four digitals.');
     const manifest=KINDS.map(kind=>{const f=files.find(f=>f?.kind===kind);if(!f||!['image/webp','image/jpeg','image/png'].includes(f.type)||!Number.isInteger(f.size)||f.size<=0||f.size>MAX_UPLOAD)throw new SubmissionError('Please choose four valid photos. Each prepared photo must be under 2 MB.');return {kind,type:f.type,size:f.size};});
     return {data,manifest};

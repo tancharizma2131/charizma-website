@@ -72,3 +72,8 @@ test('public endpoint rejects cross-origin requests and does not expose secrets 
  let res=makeRes();await handler({...req,method:'POST',headers:{...req.headers,origin:'https://other.example'},body:{action:'start'}},res);assert.equal(res.statusCode,403);
  res=makeRes();await handler({...req,method:'GET'},res);assert.deepEqual(res.body,{enabled:true});assert.equal(JSON.stringify(res.body).includes('sb_secret'),false);
 });
+test('server validation identifies the field that needs correction',()=>{
+ for(const [field,value] of Object.entries({fullName:' ',birthDate:'1899-01-01',email:'alex@localhost',instagram:'https://example.com/person',height:'175.2',tattoos:'Maybe',portfolio:'javascript:alert(1)'})){
+  assert.throws(()=>validateApplication({...fields,[field]:value},manifest),error=>error.status===400&&error.field===field);
+ }
+});
