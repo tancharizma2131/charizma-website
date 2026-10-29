@@ -59,6 +59,31 @@ document.addEventListener('DOMContentLoaded', () => {
     initializePageScripts();
 
     function initializePageScripts() {
+        if (document.querySelector('.model-name')) {
+            const topButton = document.createElement('button');
+            topButton.type = 'button';
+            topButton.className = 'back-to-top';
+            topButton.setAttribute('aria-label', 'Back to top');
+            topButton.textContent = '↑';
+            topButton.hidden = true;
+            document.body.append(topButton);
+            const updateTopButton = () => {
+                topButton.hidden = window.scrollY < window.innerHeight;
+                const footer = document.querySelector('footer');
+                const overlap = footer ? Math.max(0, window.innerHeight - footer.getBoundingClientRect().top) : 0;
+                topButton.style.bottom = `calc(max(16px, env(safe-area-inset-bottom)) + ${overlap}px)`;
+            };
+            window.addEventListener('scroll', updateTopButton, { passive: true });
+            window.addEventListener('resize', updateTopButton);
+            updateTopButton();
+            topButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+                const heading = document.querySelector('.model-name');
+                heading.setAttribute('tabindex', '-1');
+                heading.focus({ preventScroll: true });
+            });
+        }
+
         const carousel = document.querySelector('.home-carousel');
         if (carousel) {
             const slides = Array.from(carousel.querySelectorAll('.home-slide'));

@@ -339,3 +339,12 @@
 
 /* Keep the Digitals heading clear of the fixed navigation. */
 #digitals { scroll-margin-top: calc(var(--header-h) + 20px); }
+
+.profile-navigation { display: flex; justify-content: space-between; gap: 24px; max-width: 1400px; margin: 48px auto 0; padding: 24px 40px; border-top: 1px solid #d9d7d2; }
+.profile-navigation a { display: inline-flex; align-items: center; gap: 14px; min-height: 44px; font: italic 26px/1.2 Georgia, serif; letter-spacing: 0; }
+.back-to-top { position: fixed; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 900; width: 44px; height: 44px; border: 1px solid #d9d7d2; border-radius: 50%; background: #faf9f6; color: #222; font-size: 24px; cursor: pointer; }
+.back-to-top[hidden] { display: none; }
+body:has(.modal[style*="display: flex"]) .back-to-top { visibility: hidden; }
+@media (max-width: 899px) { .profile-navigation { margin-top: 28px; padding: 20px 20px 68px; } .profile-navigation a { font-size: 24px; } }
+
+@media (min-width: 900px) { .profile-navigation { padding-right: 88px; } }
