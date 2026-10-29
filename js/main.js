@@ -338,15 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalImg.style.display = 'none';
             };
 
-            const basePath = img.getAttribute('data-base-src');
-            if (basePath) {
-                modalImg.src = `${basePath}-1200.webp`;
-            } else {
-                // Fallback: derive high-res path from src if data-base-src is missing
-                const extension = originalSrc.split('.').pop();
-                const fallbackSrc = originalSrc.replace(/-\d+\.(jpg|jpeg|png|webp)$/i, `-1200.${extension}`);
-                modalImg.src = fallbackSrc;
-            }
+            // The profile src already points to the full-size original.
+            modalImg.src = originalSrc;
 
             currentImageIndex = index;
         }

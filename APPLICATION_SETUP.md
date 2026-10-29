@@ -167,3 +167,7 @@ Desktop uses a flex layout that gives the two-pane workspace the remaining viewp
 
 ## Responsive profile photos — 29 October 2026
 All five profiles now provide intrinsic width/height and responsive srcset/sizes for their 100 portfolio images and 20 digitals. Two uncropped WebP variants (400/800px) supplement unchanged originals; gallery enlargement continues using original src. Variants are generated in image/responsive/ and excluded from Git/CLI upload; npm run build recreates them before packaging. Use npm run images:refresh after replacing source photos to refresh dimensions/markup. Smallest variants total 2.03 MiB versus 16.01 MiB originals (87% lower asset weight, not a measured page-transfer claim). Mobile 390px selected a 400px variant and enlargement loaded the 1600px original. Tests verify dimensions, candidate widths/proportions and smaller byte sizes for all 120 photos.
+
+
+## Application editorial refinement — 29 October 2026
+Shortened the opening hierarchy with a left-aligned invitation, smaller heading, compact privacy/progress messages and less repeated supporting text. First field measured around 463px desktop and 470px mobile. Styled the native Women/Men example selector with form typography and an underline; added explicit reassurance that fitted clothing is welcome even where examples show swimwear. Whole-photo contain framing retained. Consolidated duplicate help links. Verified desktop and 390px mobile with no horizontal overflow, without submitting an application. Questions and required fields unchanged.

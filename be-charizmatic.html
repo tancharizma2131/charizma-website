@@ -9,8 +9,8 @@
     <link rel="icon" type="image/png" href="image/brand/cm.png">
     <link rel="stylesheet" href="style.min.css?v=20261028-entry1">
     <link rel="stylesheet" href="application-preview.css?v=20261029-full-frame">
-    <script src="js/main.min.js?v=20261028-footer1" defer></script>
-    <link rel="stylesheet" href="apply.css?v=20261028-1">
+    <script src="js/main.min.js?v=20261029-gallery2" defer></script>
+    <link rel="stylesheet" href="apply.css?v=20261029-editorial1">
     <script src="js/apply.js?v=20261029-validation1" defer></script>
     <script src="js/footer.js?v=20261028-footer1" defer></script>
 </head>
@@ -22,7 +22,7 @@
             <div class="apply-intro">
                 <p class="apply-eyebrow">Your next chapter</p>
                 <h1>Be Charizmatic</h1>
-                <p>Distinctive faces. Individual stories.<br>We’d love to discover yours.</p>
+                <p>Distinctive faces. Individual stories. We’d love to discover yours.</p>
             </div>
             <p id="connection-note" class="connection-note" role="status">Connecting the application form…</p>
             <div id="application-flow">
@@ -34,7 +34,7 @@
                 <form id="application-form" novalidate>
                     <fieldset class="apply-step" data-step="0">
                         <legend class="visually-hidden">About you</legend>
-                        <div class="step-heading"><h2 tabindex="-1">Let’s start with you.</h2><p>Your contact details and current measurements.</p></div>
+                        <div class="step-heading"><h2 tabindex="-1">Let’s start with you.</h2></div>
                         <p class="required-note">All fields are required unless marked optional.</p>
                         <div class="apply-grid">
                             <div class="apply-field"><label for="full-name">Name</label><input id="full-name" name="fullName" autocomplete="name" required maxlength="200"></div>
@@ -59,12 +59,12 @@
                     <fieldset class="apply-step" data-step="1" hidden disabled>
                         <legend class="visually-hidden">Your digitals</legend>
                         <div class="step-heading"><h2 tabindex="-1">Simply, you.</h2><p>Use the digitals below as framing examples, then add your own four recent photos. Professional photography isn’t necessary.</p></div>
-                        <p>Wear simple, fitted clothing—a plain top with fitted jeans or shorts is fine. Swimwear isn’t required.</p><div class="example-selector"><label for="example-model">Photo examples </label><select id="example-model"><option value="kaia">Women</option><option value="nik">Men</option></select></div><div class="photo-guidance"><span>Natural daylight</span><span>No makeup or filters</span><span>Simple, fitted clothing</span></div>
+                        <p class="clothing-guidance">Wear simple, fitted clothing—a plain top with fitted jeans or shorts is fine. <strong>Swimwear isn’t required, even where the examples show it.</strong></p><div class="example-selector"><label for="example-model">Photo examples </label><select id="example-model"><option value="kaia">Women</option><option value="nik">Men</option></select></div><div class="photo-guidance"><span>Natural daylight</span><span>No makeup or filters</span><span>Simple, fitted clothing</span></div>
                         <p class="photo-formats">JPG, PNG or WebP · Up to 10 MB per photo. Images are prepared for upload automatically.</p>
                         <div class="photo-grid" id="digital-uploads"></div>
                         <p id="photo-error" class="field-error" role="alert" hidden></p>
                         <div class="apply-grid photo-details">
-                            <div class="apply-field full-width"><label for="portfolio">Portfolio link <span>optional</span></label><input id="portfolio" maxlength="1000" name="portfolio" type="url" placeholder="https://" maxlength="1000"></div>
+                            <div class="apply-field full-width"><label for="portfolio">Portfolio link <span>optional</span></label><input id="portfolio" name="portfolio" type="url" placeholder="https://" maxlength="1000"></div>
                         </div>
                         <p class="application-review-note">You can go back to review your answers before submitting.</p>
                         <p class="application-review-note">Your details and photos are shared privately with the Charizma team to review your application and contact you.</p>
@@ -75,7 +75,6 @@
                         <p id="step-count" aria-live="polite">Step 1 of 2</p>
                         <button type="submit" id="next-step" class="apply-next" disabled>Continue <span aria-hidden="true">→</span></button>
                     </div>
-                    <p class="apply-help">Need a hand? <a href="mailto:info@charizma-mgmt.com">info@charizma-mgmt.com</a></p>
                 </form>
             </div>
             <section id="application-confirmation" class="preview-confirmation" hidden aria-labelledby="confirmation-title">
