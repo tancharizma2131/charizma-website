@@ -4,7 +4,7 @@
 .staff-header a { display: block; width: 210px; margin: auto; }
 .staff-header img { display: block; width: 100%; height: auto; }
 .staff-shell { box-sizing: border-box; width: 100%; max-width: 520px; margin: auto; padding: 64px 28px 80px; }
-.staff-kicker { font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px; color: #777; margin: 0 0 20px; }
+.staff-kicker { font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px; color: #595750; margin: 0 0 20px; }
 .staff-shell h1 { font: italic clamp(38px, 6vw, 48px)/1.12 Georgia, serif; text-transform: none; letter-spacing: -1px; margin: 0 0 22px; }
 .staff-intro { font-size: 14px; line-height: 1.8; color: #555; margin: 0 0 28px; overflow-wrap: anywhere; }
 .staff-shell label { display: block; font-size: 11px; color: #555; margin-bottom: 8px; }

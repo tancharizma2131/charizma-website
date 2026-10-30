@@ -328,12 +328,11 @@
     .page-model-editorial .model-details .model-bio { margin-bottom: 4px; }
     .page-model-editorial .model-bio-disclosure summary { box-sizing: border-box; }
     .page-model-editorial .model-links {
-        display: grid;
-        grid-template-columns: auto auto;
-        justify-content: start;
-        column-gap: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0 20px;
     }
-    .page-model-editorial .model-links .comp-card-link { grid-column: 1 / -1; }
     .page-model-editorial .model-links a { margin-top: 0; border-bottom: 0; }
 }
 

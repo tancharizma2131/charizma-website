@@ -1,4 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    async function boundedRequest(url, options = {}) {
+        const controller = new AbortController();
+        let timer;
+        const timeout = new Promise((_, reject) => {
+            timer = setTimeout(() => {
+                reject(new Error('The connection took too long. Please try again.'));
+                controller.abort();
+            }, 20000);
+        });
+        try {
+            return await Promise.race([timeout, (async () => {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                const data = await response.json().catch(error => {
+                    if (controller.signal.aborted) throw error;
+                    return {};
+                });
+                return { response, data };
+            })()]);
+        } finally { clearTimeout(timer); }
+    }
+
     const emailForm = document.querySelector('#staff-email-form');
     const codeForm = document.querySelector('#staff-code-form');
     const message = document.querySelector('#staff-message');
@@ -10,11 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let resendAt = 0;
     let timer;
     async function request(body) {
-        const response = await fetch(body ? '/api/staff' : `/api/staff?check=${crypto.randomUUID()}`, {
+        const { response, data } = await boundedRequest(body ? '/api/staff' : `/api/staff?check=${crypto.randomUUID()}`, {
             method: body ? 'POST' : 'GET', credentials: 'same-origin', cache: 'no-store',
             ...(body ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
         });
-        const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || 'Sign-in is temporarily unavailable. Please try again.');
         return data;
     }

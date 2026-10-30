@@ -49,7 +49,7 @@ body.page-home main { padding: 0; flex-grow: 0; }
     .page-home .header-flex { gap: 18px; }
     .page-home nav { width: auto; flex: 1; }
     .page-home nav ul { width: 100%; justify-content: space-between; gap: 12px; }
-    .page-home nav ul li a { font-size: 10px; letter-spacing: .5px; }
+    .page-home nav ul li a { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 0; font-size: 11px; letter-spacing: .3px; }
     .spread { min-height: 620px; }
     .pair { grid-template-columns: 1fr; }
     .pair .hero-photo:first-child { display: none; }
@@ -66,8 +66,9 @@ body.page-home main { padding: 0; flex-grow: 0; }
     .count { margin: 0 5px; }
 }
 @media (max-width: 360px) {
-    .page-home nav ul { gap: 8px; }
-    .page-home nav ul li a { font-size: 9px; letter-spacing: .2px; }
+    .page-home nav ul { gap: 6px; }
+    .page-home .header-flex { gap: 12px; }
+    .page-home nav ul li a { font-size: 11px; letter-spacing: 0; }
 }
 
 .page-home .site-footer { background: #111; color: #aaa; border-top-color: #111; }

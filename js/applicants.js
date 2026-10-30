@@ -1,4 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    async function boundedRequest(url, options = {}) {
+        const controller = new AbortController();
+        let timer;
+        const timeout = new Promise((_, reject) => {
+            timer = setTimeout(() => {
+                reject(new Error('The connection took too long. Please try again.'));
+                controller.abort();
+            }, 20000);
+        });
+        try {
+            return await Promise.race([timeout, (async () => {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                const data = await response.json().catch(error => {
+                    if (controller.signal.aborted) throw error;
+                    return {};
+                });
+                return { response, data };
+            })()]);
+        } finally { clearTimeout(timer); }
+    }
+
     const $ = selector => document.querySelector(selector);
     const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
     const date = (value, withTime = false) => {
@@ -23,11 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#viewer-image').removeAttribute('src');
     }
     async function request(params = {}, body) {
-        const response = await fetch(`/api/applicants?${new URLSearchParams({ ...params, _request: crypto.randomUUID() })}`, {
+        const { response, data } = await boundedRequest(`/api/applicants?${new URLSearchParams({ ...params, _request: crypto.randomUUID() })}`, {
             method: body ? 'POST' : 'GET', cache: 'no-store', credentials: 'same-origin',
             ...(body ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
         });
-        const data = await response.json().catch(() => ({}));
         if (response.status === 401) { clearPrivateUI(); location.replace('staff.html'); throw new Error('Please sign in again.'); }
         if (!response.ok) throw new Error(data.error || 'We couldn’t connect. Please try again.');
         return data;
@@ -162,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#refresh-records').addEventListener('click',()=>{selectedId=null;loadList();});$('#previous-page').addEventListener('click',()=>{if(!pendingWrite&&page>0)loadList(page-1);});$('#next-page').addEventListener('click',()=>{if(!pendingWrite&&(page+1)*25<total)loadList(page+1);});
     $('#retry-alerts').addEventListener('click',async()=>{
         const button=$('#retry-alerts');button.disabled=true;$('#desk-error').textContent='';
-        try{const response=await fetch('/api/notifications',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const result=await response.json();if(!response.ok)throw new Error(result.error||'Email alerts could not be checked.');$('#desk-status').textContent=result.sent?`${result.sent} email alerts sent.`:'Pending alerts checked.';}
+        try{const {response,data:result}=await boundedRequest('/api/notifications',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});if(!response.ok)throw new Error(result.error||'Email alerts could not be checked.');$('#desk-status').textContent=result.sent?`${result.sent} email alerts sent.`:'Pending alerts checked.';}
         catch(error){showError(error);}finally{button.disabled=false;}
     });
     $('#desk-sign-out').addEventListener('click',async()=>{
-        try{const response=await fetch('/api/staff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout'})});if(!response.ok)throw new Error('Couldn’t sign out. Please try again.');clearPrivateUI();location.replace('staff.html');}
+        try{const {response}=await boundedRequest('/api/staff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout'})});if(!response.ok)throw new Error('Couldn’t sign out. Please try again.');clearPrivateUI();location.replace('staff.html');}
         catch(error){showError(error);}
     });
     // On return from browser history, revalidate before showing private records.

@@ -100,7 +100,7 @@ export async function finishSubmission(body){
     const found=await adminRequest(`/rest/v1/application_submissions?${new URLSearchParams({id:`eq.${body.id}`,token_hash:`eq.${tokenHash(body.token)}`,select:'id,manifest,completed_at,application_id,expires_at'})}`);
     const ticket=found[0];if(!ticket)throw new SubmissionError('Upload session not found. Please reload and try again.',404);
     if(ticket.completed_at)return {reference:ticket.application_id};
-    if(new Date(ticket.expires_at)<new Date())throw new SubmissionError('This upload session has expired. Please reload and try again.',410);
+    if(new Date(ticket.expires_at)<new Date())throw new SubmissionError('Your upload session expired. Retry to continue; your details and photos are still here.',410);
     const photos=[];
     for(const file of ticket.manifest){
         const original=await boundedImage(await adminRequest(`/storage/v1/object/authenticated/application-uploads/${pendingPath(body.id,file)}`,{raw:true}));
