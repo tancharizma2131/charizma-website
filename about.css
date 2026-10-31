@@ -87,3 +87,14 @@
 }
 
 .founder .founder-credits { margin-top: 12px; font-size: 12px; line-height: 1.7; letter-spacing: 0; color: #555; font-weight: 300; }
+
+.founders-intro { font-size: .95rem; font-weight: 300; line-height: 1.9; color: #444; margin: 0 0 28px; }
+@media (max-width: 899px) {
+    .about-details { display: contents; }
+    .about-details h1 { grid-row: 1; margin-bottom: 0; }
+    .about-bio { grid-row: 2; }
+    .about-founders { grid-row: 3; margin-top: 0; }
+    .about-feed { grid-row: 4; }
+    .about-contact { grid-row: 5; }
+    .about-contact hr { margin-top: 0; }
+}

@@ -817,8 +817,20 @@ nav ul li a { font-size: 11px; font-weight: 400; letter-spacing: 1.1px; }
 .hamburger { gap: 7px; }
 .hamburger .bar { height: 1px; border-radius: 0; }
 @media (max-width: 1024px) {
-    nav ul { gap: 40px; }
-    nav ul li a { font-size: 2rem; font-weight: 100; }
+    nav ul { gap: 24px; }
+    nav ul li a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(26px, 7vw, 30px);
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: 0;
+        text-transform: capitalize;
+    }
+    body:not(.page-home) nav { background-color: #f5f4f0; }
 }
 @media (max-width: 640px) {
     header .container { padding-left: 20px; padding-right: 20px; }
