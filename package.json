@@ -10,7 +10,7 @@
     "watch": "nodemon --watch style.css --watch js/main.js --ext css,js --exec \"node build.js\"",
     "dev:app": "node scripts/serve-app.js",
     "test:auth": "node --test tests/staff-auth.test.js",
-    "test:dashboard": "node --test tests/applicants.test.js tests/applicants-ui.test.js",
+    "test:dashboard": "node --test tests/applicants.test.js tests/applicants-ui.test.js tests/applicant-viewer.test.js",
     "test:applications": "node --test tests/submissions.test.js tests/apply-ui.test.js",
     "test:publication": "npm run build && node --test tests/publication.test.js",
     "images:refresh": "node scripts/responsive-model-images.js --update-markup"

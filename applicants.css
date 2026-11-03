@@ -82,3 +82,19 @@
     .review-top h2 { overflow-wrap: anywhere; }
     .review-status { width: 140px; }
 }
+
+/* Private digital viewer controls. */
+.viewer-tools { display:flex; justify-content:center; gap:12px; height:48px; }
+.viewer-tools button, #viewer-retry { min-width:44px; min-height:44px; border:1px solid #666; border-radius:4px; background:#252525; color:white; cursor:pointer; }
+.viewer-tools button:disabled { opacity:.35; cursor:default; }
+#viewer-status { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; z-index:2; pointer-events:none; }
+#viewer-status.is-loading::before { content:''; display:block; width:24px; height:24px; margin:0 auto 12px; border:2px solid #555; border-top-color:white; border-radius:50%; animation:spin 1s linear infinite; }
+#viewer-retry { position:absolute; top:60%; left:50%; transform:translateX(-50%); z-index:3; padding:8px 16px; }
+#photo-viewer .viewer-body { height:calc(100% - 160px); gap:8px; }
+#viewer-stage { height:100%; min-width:0; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none; }
+#viewer-stage.is-zoomed { cursor:grab; }
+#viewer-stage.is-zoomed:active { cursor:grabbing; }
+#photo-viewer #viewer-image { max-height:100%; max-width:100%; flex-shrink:0; user-select:none; }
+#photo-viewer :focus-visible { outline:2px solid white; outline-offset:3px; }
+@media (prefers-reduced-motion:reduce) { #viewer-status.is-loading::before { animation:none; } }
+@media(max-width:600px) { #photo-viewer .viewer-body { padding:0 4px; grid-template-columns:44px minmax(0,1fr) 44px; } .viewer-toolbar { padding:12px; gap:8px; } }

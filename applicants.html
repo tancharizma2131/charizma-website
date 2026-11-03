@@ -9,8 +9,8 @@
     <link rel="icon" type="image/png" href="image/brand/cm.png">
     <link rel="stylesheet" href="style.min.css?v=20261031-menu-small">
     <link rel="stylesheet" href="applicants-preview.css?v=20261028-footer1">
-    <link rel="stylesheet" href="applicants.css?v=20261029-workspace1">
-    <script src="js/applicants.js?v=20261029-note-save1" defer></script>
+    <link rel="stylesheet" href="applicants.css?v=20261104-viewer">
+    <script src="js/applicants.js?v=20261104-viewer" defer></script>
     <script src="js/footer.js?v=20261028-footer1" defer></script>
 </head>
 <body class="applicant-desk">
@@ -48,7 +48,7 @@
     <footer></footer>
     <dialog id="photo-viewer" aria-labelledby="viewer-title">
         <div class="viewer-toolbar"><p id="viewer-title"></p><button type="button" id="close-viewer" aria-label="Close photo viewer">×</button></div>
-        <div class="viewer-body"><button type="button" id="previous-photo" aria-label="Previous digital">←</button><img id="viewer-image" alt=""><button type="button" id="next-photo" aria-label="Next digital">→</button></div>
+        <div class="viewer-tools"><button type="button" id="zoom-out" aria-label="Zoom out">−</button><button type="button" id="zoom-reset" aria-label="Reset zoom">100%</button><button type="button" id="zoom-in" aria-label="Zoom in">+</button></div><p id="viewer-status" role="status" aria-live="polite"></p><button type="button" id="viewer-retry" hidden>Retry photo</button><div class="viewer-body"><button type="button" id="previous-photo" aria-label="Previous digital">←</button><div id="viewer-stage"><img id="viewer-image" alt="" draggable="false"></div><button type="button" id="next-photo" aria-label="Next digital">→</button></div>
         <p class="viewer-credit">Private digitals · Charizma Management</p>
     </dialog>
 </body>

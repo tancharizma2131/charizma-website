@@ -32,12 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
     let records = [], selectedId, selectedRecord, page = 0, total = 0, statusFilter = 'All';
     let listVersion = 0, detailVersion = 0, photoVersion = 0, pendingWrite = false, signedOut = false;
     const drafts = new Map();
+    const photoLinks = new Map();
+    async function photoLink(id, photo, fresh=false) {
+        const key=`${id}:${photo}`, cached=photoLinks.get(key);
+        if(!fresh && cached && cached.until>Date.now()) return cached.promise;
+        const entry={until:Date.now()+240000};
+        entry.promise=request({id,photo}).catch(error=>{if(photoLinks.get(key)===entry)photoLinks.delete(key);throw error;});
+        photoLinks.set(key,entry);return entry.promise;
+    }
     const viewer = $('#photo-viewer');
     let viewerIndex = 0, viewerPhotos = [], viewerTrigger;
 
     function clearPrivateUI() {
         signedOut = true;
-        records = []; selectedRecord = null; drafts.clear();
+        records = []; selectedRecord = null; drafts.clear(); photoLinks.clear();
         $('#applicant-list').replaceChildren(); $('#applicant-review').replaceChildren();
         $('#desk-content').hidden = true;
         if (viewer.open) viewer.close();
@@ -155,23 +163,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         panel.querySelectorAll('[data-photo]').forEach(button=>{
             const photo=photos.find(item=>item.id===button.dataset.photo);
-            request({id:record.id,photo:photo.id}).then(data=>{
+            photoLink(record.id,photo.id).then(data=>{
                 if(!button.isConnected)return;
                 const img=button.querySelector('img');img.onload=()=>{img.hidden=false;button.querySelector('.photo-error').hidden=true;};img.onerror=()=>{button.querySelector('.photo-error').textContent='Photo unavailable. Click to retry.';};img.src=data.url;
             }).catch(()=>{if(button.isConnected)button.querySelector('.photo-error').textContent='Photo unavailable. Click to retry.';});
             button.addEventListener('click',()=>{viewerPhotos=photos;viewerIndex=photos.findIndex(item=>item.id===photo.id);viewerTrigger=button;viewer.showModal();document.body.style.overflow='hidden';renderViewer(record.id,record.full_name);});
         });
     }
-    async function renderViewer(id=selectedRecord?.id,name=selectedRecord?.full_name){
-        const version=++photoVersion;const photo=viewerPhotos[viewerIndex];if(!photo)return;
-        $('#viewer-title').textContent=`${name} · ${kinds[photo.kind]||'Digital'} · ${viewerIndex+1} of ${viewerPhotos.length}`;
-        const img=$('#viewer-image');img.removeAttribute('src');img.alt='Loading photo…';
-        try{const data=await request({id,photo:photo.id});if(version===photoVersion&&viewer.open){img.src=data.url;img.alt=`${name} · ${kinds[photo.kind]||'Digital'}`;}}
-        catch(error){if(version===photoVersion){img.alt='Photo could not be loaded. Close and try again.';showError(error);}}
+    let zoom=1, panX=0, panY=0, gesture, imageTimer, suppressBackdropClick=false;
+    const stage=$('#viewer-stage'), viewerImage=$('#viewer-image');
+    function updateZoom(value=zoom){
+        zoom=Math.max(1,Math.min(4,value));if(zoom===1){panX=0;panY=0;}
+        const limitX=stage.clientWidth*(zoom-1)/2,limitY=stage.clientHeight*(zoom-1)/2;
+        panX=Math.max(-limitX,Math.min(limitX,panX));panY=Math.max(-limitY,Math.min(limitY,panY));
+        viewerImage.style.transform=`translate(${panX}px, ${panY}px) scale(${zoom})`;
+        $('#zoom-reset').textContent=`${Math.round(zoom*100)}%`;
+        $('#zoom-out').disabled=zoom===1;$('#zoom-in').disabled=zoom===4;
+        stage.classList.toggle('is-zoomed',zoom>1);
     }
-    const changePhoto=direction=>{viewerIndex=(viewerIndex+direction+viewerPhotos.length)%viewerPhotos.length;renderViewer();};
+    async function renderViewer(id=selectedRecord?.id,name=selectedRecord?.full_name,fresh=false){
+        clearTimeout(imageTimer);const version=++photoVersion;const photo=viewerPhotos[viewerIndex];if(!photo)return;
+        $('#viewer-title').textContent=`${name} · ${kinds[photo.kind]||'Digital'} · ${viewerIndex+1} of ${viewerPhotos.length}`;
+        updateZoom(1);viewerImage.hidden=true;viewerImage.removeAttribute('src');
+        viewerImage.alt=`${name} · ${kinds[photo.kind]||'Digital'}`;
+        $('#viewer-status').textContent='Loading photo…';$('#viewer-status').classList.add('is-loading');$('#viewer-retry').hidden=true;
+        const fail=()=>{if(version!==photoVersion||!viewer.open)return;clearTimeout(imageTimer);$('#viewer-status').textContent='Photo could not be loaded. Please retry.';$('#viewer-status').classList.remove('is-loading');$('#viewer-retry').hidden=false;};
+        viewerImage.onload=()=>{if(version!==photoVersion||!viewer.open)return;clearTimeout(imageTimer);viewerImage.hidden=false;$('#viewer-status').textContent='';$('#viewer-status').classList.remove('is-loading');};
+        viewerImage.onerror=fail;
+        imageTimer=setTimeout(fail,20000);
+        try{const data=await photoLink(id,photo.id,fresh);if(version===photoVersion&&viewer.open)viewerImage.src=data.url;}
+        catch{fail();}
+    }
+    const changePhoto=direction=>{if(!viewerPhotos.length)return;viewerIndex=(viewerIndex+direction+viewerPhotos.length)%viewerPhotos.length;renderViewer();};
+    $('#viewer-retry').addEventListener('click',()=>renderViewer(undefined,undefined,true));
+    $('#zoom-in').addEventListener('click',()=>updateZoom(zoom+.5));
+    $('#zoom-out').addEventListener('click',()=>updateZoom(zoom-.5));
+    $('#zoom-reset').addEventListener('click',()=>updateZoom(1));
+    stage.addEventListener('dblclick',()=>updateZoom(zoom===1?2:1));
+    stage.addEventListener('pointerdown',event=>{if(event.button!==0)return;gesture={id:event.pointerId,x:event.clientX,y:event.clientY,px:panX,py:panY};stage.setPointerCapture(event.pointerId);});
+    stage.addEventListener('pointermove',event=>{if(!gesture||gesture.id!==event.pointerId||zoom===1)return;panX=gesture.px+event.clientX-gesture.x;panY=gesture.py+event.clientY-gesture.y;updateZoom();});
+    stage.addEventListener('pointerup',event=>{if(!gesture||gesture.id!==event.pointerId)return;const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;suppressBackdropClick=Math.abs(dx)>8||Math.abs(dy)>8;gesture=null;if(zoom===1&&Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)changePhoto(dx<0?1:-1);});
+    stage.addEventListener('pointercancel',()=>{gesture=null;});
+    viewer.addEventListener('click',event=>{
+        if(suppressBackdropClick){suppressBackdropClick=false;return;}
+        if(event.target.closest('button, img'))return;
+        viewer.close();
+    });
     $('#close-viewer').addEventListener('click',()=>viewer.close());
-    viewer.addEventListener('close',()=>{++photoVersion;document.body.style.overflow='';$('#viewer-image').removeAttribute('src');viewerTrigger?.focus();});
+    viewer.addEventListener('close',()=>{++photoVersion;clearTimeout(imageTimer);gesture=null;viewerImage.onload=null;viewerImage.onerror=null;updateZoom(1);document.body.style.overflow='';$('#viewer-image').removeAttribute('src');viewerTrigger?.focus();});
     $('#previous-photo').addEventListener('click',()=>changePhoto(-1));$('#next-photo').addEventListener('click',()=>changePhoto(1));
     viewer.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();changePhoto(event.key==='ArrowLeft'?-1:1);}});
     $('#applicant-list').addEventListener('click',event=>{const button=event.target.closest('[data-id]');if(!button||pendingWrite)return;$('#desk-workspace').classList.add('review-open');loadDetail(button.dataset.id,true);selectedId=button.dataset.id;renderList();});
