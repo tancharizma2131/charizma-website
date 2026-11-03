@@ -20,3 +20,27 @@
 18. [26.01.26_hyejoo_4094.jpeg](https://drive.google.com/file/d/1vl9SwP-IqiNkExe-rCZNPHctmDzNnvLB/view?usp=drivesdk) → curated-18.webp
 19. [copy_4976597D-6B4A-4E32-BE36-6B0197108E9F.jpeg](https://drive.google.com/file/d/1S3aODFenXy84pD02Z5wK06uaKo4HKsOl/view?usp=drivesdk) → curated-19.webp
 20. [DSC09939.jpg](https://drive.google.com/file/d/11n5zTqrah49mmgweinnw8UJEBaUz9ZWc/view?usp=drivesdk) → curated-20.webp
+
+
+## Approved update — 3 November 2026
+12 new long-hair photos and 8 existing photos. Opening image also used as roster cover.
+1. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.46.48.jpeg
+2. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.47.02.jpeg
+3. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.46.51.jpeg
+4. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.47.12 (1).jpeg
+5. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-03.webp
+6. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-04.webp
+7. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.46.39.jpeg
+8. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.46.29.jpeg
+9. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-06.webp
+10. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-17.webp
+11. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.47.01.jpeg
+12. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.47.03.jpeg
+13. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-09.webp
+14. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-12.webp
+15. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.46.38.jpeg
+16. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.46.54.jpeg
+17. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.47.13.jpeg
+18. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-07.webp
+19. old: /Users/patipankhamwachirapitak/charizma-mgmt-site/image/models/women/kaia/Portfolio/curated-14.webp
+20. new: /Users/patipankhamwachirapitak/Desktop/CHARIZMA/Kaia/Update Photos 3:11:26/photo_2569-11-03 15.47.05.jpeg
